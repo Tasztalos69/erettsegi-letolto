@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement, useEffect, useState } from "react";
 import PickerButton from "./components/PickerButton";
 
@@ -41,6 +42,16 @@ const urlConstructor = (data: Partial<ExamData>, isKey = false): string => {
   )}_${data.subject}_${year.substring(2, 4)}${month}_${type}.pdf`;
 };
 
+const StageDiv = (props: any) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ delay: 0, duration: 0.2 }}
+    {...props}
+  />
+);
+
 const Picker = (): ReactElement => {
   const [data, setData] = useState<Partial<ExamData>>({});
   const [stage, setStage] = useState<Stage>(0);
@@ -55,7 +66,7 @@ const Picker = (): ReactElement => {
     switch (stage) {
       case Stage.YEAR:
         return (
-          <div>
+          <StageDiv key="year">
             {YEARS.map((y) => (
               <PickerButton
                 key={y}
@@ -67,12 +78,13 @@ const Picker = (): ReactElement => {
                 {y}
               </PickerButton>
             ))}
-          </div>
+          </StageDiv>
         );
       case Stage.PHASE:
         return (
-          <div>
+          <StageDiv key="phase">
             <PickerButton
+              key="osz"
               onClick={() => {
                 setData({ ...data, phase: "fall" });
                 setStage(stage + 1);
@@ -81,6 +93,7 @@ const Picker = (): ReactElement => {
               Ősz
             </PickerButton>
             <PickerButton
+              key="tavasz"
               onClick={() => {
                 setData({ ...data, phase: "spring" });
                 setStage(stage + 1);
@@ -88,12 +101,13 @@ const Picker = (): ReactElement => {
             >
               Tavasz
             </PickerButton>
-          </div>
+          </StageDiv>
         );
       case Stage.DIFFICULTY:
         return (
-          <div>
+          <StageDiv key="diff">
             <PickerButton
+              key="kozep"
               onClick={() => {
                 setData({ ...data, difficulty: "mid" });
                 setStage(stage + 1);
@@ -102,6 +116,7 @@ const Picker = (): ReactElement => {
               Középszint
             </PickerButton>
             <PickerButton
+              key="emelt"
               onClick={() => {
                 setData({ ...data, difficulty: "high" });
                 setStage(stage + 1);
@@ -109,12 +124,12 @@ const Picker = (): ReactElement => {
             >
               Emelt szint
             </PickerButton>
-          </div>
+          </StageDiv>
         );
 
       case Stage.SUBJECT:
         return (
-          <div>
+          <StageDiv key="subject">
             {Object.entries(SUBJECTS).map((s) => (
               <PickerButton
                 key={s[0]}
@@ -126,7 +141,7 @@ const Picker = (): ReactElement => {
                 {s[1]}
               </PickerButton>
             ))}
-          </div>
+          </StageDiv>
         );
       case Stage.DLOAD:
         return <div>Downloading...</div>;
@@ -136,8 +151,10 @@ const Picker = (): ReactElement => {
   };
 
   return (
-    <div className="flex justify-center items-center flex-wrap w-2/3 mx-auto mt-20">
-      {getStage()}
+    <div className="w-2/3 mx-auto mt-20 text-center">
+      <AnimatePresence initial={false} exitBeforeEnter>
+        {getStage()}
+      </AnimatePresence>
     </div>
   );
 };
