@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement, useEffect, useState } from "react";
 import PickerButton from "./components/PickerButton";
+import { Stage } from "./types";
 
 const YEARS = Array(2021 - 2005 + 1)
   .fill(0)
@@ -17,14 +18,6 @@ interface ExamData {
   phase: "fall" | "spring";
   difficulty: "mid" | "high";
   subject: string; // TODO subject list
-}
-
-enum Stage {
-  YEAR,
-  PHASE,
-  DIFFICULTY,
-  SUBJECT,
-  DLOAD,
 }
 
 const urlConstructor = (data: Partial<ExamData>, isKey = false): string => {
@@ -52,9 +45,13 @@ const StageDiv = (props: any) => (
   />
 );
 
-const Picker = (): ReactElement => {
+interface PickerProps {
+  stage: number;
+  setStage: (num: number) => void;
+}
+
+const Picker = ({ stage, setStage }: PickerProps): ReactElement => {
   const [data, setData] = useState<Partial<ExamData>>({});
-  const [stage, setStage] = useState<Stage>(0);
 
   useEffect(() => {
     if (stage === Stage.DLOAD) {
@@ -84,15 +81,6 @@ const Picker = (): ReactElement => {
         return (
           <StageDiv key="phase">
             <PickerButton
-              key="osz"
-              onClick={() => {
-                setData({ ...data, phase: "fall" });
-                setStage(stage + 1);
-              }}
-            >
-              Ősz
-            </PickerButton>
-            <PickerButton
               key="tavasz"
               onClick={() => {
                 setData({ ...data, phase: "spring" });
@@ -100,6 +88,15 @@ const Picker = (): ReactElement => {
               }}
             >
               Tavasz
+            </PickerButton>
+            <PickerButton
+              key="osz"
+              onClick={() => {
+                setData({ ...data, phase: "fall" });
+                setStage(stage + 1);
+              }}
+            >
+              Ősz
             </PickerButton>
           </StageDiv>
         );
@@ -151,7 +148,7 @@ const Picker = (): ReactElement => {
   };
 
   return (
-    <div className="w-2/3 mx-auto mt-20 text-center">
+    <div className="text-center">
       <AnimatePresence initial={false} exitBeforeEnter>
         {getStage()}
       </AnimatePresence>
