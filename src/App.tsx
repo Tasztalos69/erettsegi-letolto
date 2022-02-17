@@ -12,7 +12,7 @@ const App = () => {
       </h1>
       <div className="container relative w-3/5 mx-auto mt-20">
         <Picker stage={stage} setStage={setStage} />
-        <Legend stage={stage} />
+        <Legend stage={stage} setStage={setStage} />
       </div>
     </div>
   );

@@ -5,3 +5,8 @@ export enum Stage {
   SUBJECT,
   DLOAD,
 }
+
+export interface StageProps {
+  stage: number;
+  setStage: (num: number) => void;
+}

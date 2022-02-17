@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement, useEffect, useState } from "react";
 import PickerButton from "./components/PickerButton";
-import { Stage } from "./types";
+import { Stage, StageProps } from "./types";
 
 const YEARS = Array(2021 - 2005 + 1)
   .fill(0)
@@ -45,12 +45,7 @@ const StageDiv = (props: any) => (
   />
 );
 
-interface PickerProps {
-  stage: number;
-  setStage: (num: number) => void;
-}
-
-const Picker = ({ stage, setStage }: PickerProps): ReactElement => {
+const Picker = ({ stage, setStage }: StageProps): ReactElement => {
   const [data, setData] = useState<Partial<ExamData>>({});
 
   useEffect(() => {
