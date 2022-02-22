@@ -51,47 +51,58 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
     month = "nov";
   }
 
+  let filetype;
+  switch (srcType) {
+    case "for":
+      filetype = "zip";
+      break;
+    case "fl":
+    case "ut":
+      filetype = "pdf";
+      break;
+  }
+
   let isFor = false;
   if (srcType === "for") {
     isFor = true;
     srcType = "fl";
   }
 
-  const subject = data.subject + isFor ? "for" : "";
+  const subject = data.subject + (isFor ? "for" : "");
 
   // 2012 custom scheme #1
   if (data.year === 2012 && data.phase === "fall")
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${diff}_${year}${phase}/${diff.substring(
       0,
       1
-    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
+    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
 
   // 2012 custom scheme #2
   if (data.year === 2012 && data.phase === "spring")
     return `https://www.oktatas.hu/pub_bin/dload/kozoktatas/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1
-    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
+    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
 
   // First exam custom scheme
   if (data.year === 2005 && data.phase === "spring")
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1
-    )}_${subject}_${srcType}.pdf`;
+    )}_${subject}_${srcType}.${filetype}`;
 
   // Old scheme before 2012
   if (data.year < 2012)
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1
-    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
+    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
 
   // New scheme from 2013
   return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${year}${phase}_${diff}/${diff.substring(
     0,
     1
-  )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
+  )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
 };
 
 export default urlConstructor;
