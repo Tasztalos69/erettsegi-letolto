@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import Legend from "./Legend";
 import Picker from "./Picker";
@@ -11,6 +12,23 @@ const App = () => {
         Érettségi letöltő
       </h1>
       <div className="container relative w-3/5 mx-auto mt-20">
+        <AnimatePresence>
+          {stage > 0 && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0, duration: 0.2 }}
+              whileHover={{
+                color: "rgb(45 212 191)",
+              }}
+              onClick={() => stage > 0 && setStage(stage - 1)}
+              className="absolute -left-4 top-0 -translate-x-full text-lg font-mono font-semibold uppercase underline"
+            >
+              Vissza
+            </motion.button>
+          )}
+        </AnimatePresence>
         <Picker stage={stage} setStage={setStage} />
         <Legend stage={stage} setStage={setStage} />
       </div>
