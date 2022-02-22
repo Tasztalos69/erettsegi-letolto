@@ -1,38 +1,52 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
+
 import PickerButton from "./components/PickerButton";
-import { Stage, StageProps } from "./types";
+import { ExamData, Stage, StageProps } from "./types";
+import urlConstructor from "./utils/urlConstructor";
+
+import missingExams from "./missing-exams.json";
+import { IconSearch } from "@tabler/icons";
 
 const YEARS = Array(2021 - 2005 + 1)
   .fill(0)
   .map((x, i) => x + 2005 + i);
 
-const SUBJECTS = {
-  mat: "Matematika",
-  magyir: "Magyar nyelv és irodalom",
-  inf: "Informatika",
-};
-
-interface ExamData {
-  year: number;
-  phase: "fall" | "spring";
-  difficulty: "mid" | "high";
-  subject: string; // TODO subject list
+interface Indexable {
+  [key: string]: string;
 }
 
-const urlConstructor = (data: Partial<ExamData>, isKey = false): string => {
-  if (!data.difficulty || !data.phase || !data.subject || !data.year)
-    throw Error("Not enough parameters!");
-  const year = data.year.toString();
-  const phase = data.phase === "fall" ? "osz" : "tavasz";
-  const month = data.phase === "fall" ? "okt" : "maj";
-  const diff = data.difficulty === "mid" ? "kozep" : "emelt";
-  const type = isKey ? "ut" : "fl";
+const SUBJECTS: Indexable = {
+  mat: "Matematika",
+  magyir: "Magyar nyelv és irodalom",
+  tort: "Történelem",
+  inf: "Informatika",
+  angol: "Angol",
+  nemet: "Német",
+  francia: "Francia",
+  spanyol: "Spanyol",
+  orosz: "Orosz",
+  olasz: "Olasz",
+  fldr: "Földrajz",
+  kem: "Kémia",
+  bio: "Biológia",
+  fiz: "Fizika",
+  enekzene: "Ének-zene",
+  drama: "Dráma",
+  muvtort: "Művészettörténet",
+  filo: "Filozófia",
+  tars: "Társadalomismeret",
+  tarspr: "Társadalomismeret projekt",
+};
 
-  return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${year}${phase}_${diff}/${diff.substring(
-    0,
-    1
-  )}_${data.subject}_${year.substring(2, 4)}${month}_${type}.pdf`;
+const humanPhase: Indexable = {
+  fall: "ősz",
+  spring: "tavasz",
+};
+
+const humanDiff: Indexable = {
+  mid: "középszint",
+  high: "emelt szint",
 };
 
 const StageDiv = (props: any) => (
@@ -47,12 +61,13 @@ const StageDiv = (props: any) => (
 
 const Picker = ({ stage, setStage }: StageProps): ReactElement => {
   const [data, setData] = useState<Partial<ExamData>>({});
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    if (stage === Stage.DLOAD) {
-      window.location.href = urlConstructor(data);
-    }
-  }, [stage, data]);
+  // useEffect(() => {
+  //   if (stage === Stage.DLOAD) {
+  //     window.location.href = urlConstructor(data);
+  //   }
+  // }, [stage, data]);
 
   const getStage = () => {
     switch (stage) {
@@ -82,7 +97,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
                 setStage(stage + 1);
               }}
             >
-              Tavasz
+              {humanPhase["spring"]}
             </PickerButton>
             <PickerButton
               key="osz"
@@ -91,7 +106,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
                 setStage(stage + 1);
               }}
             >
-              Ősz
+              {humanPhase["fall"]}
             </PickerButton>
           </StageDiv>
         );
@@ -105,7 +120,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
                 setStage(stage + 1);
               }}
             >
-              Középszint
+              {humanDiff["mid"]}
             </PickerButton>
             <PickerButton
               key="emelt"
@@ -114,29 +129,93 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
                 setStage(stage + 1);
               }}
             >
-              Emelt szint
+              {humanDiff["high"]}
             </PickerButton>
           </StageDiv>
         );
 
       case Stage.SUBJECT:
+        const filtered = Object.entries(SUBJECTS).filter((s) =>
+          search.length > 0
+            ? s[1].toLowerCase().includes(search.toLowerCase())
+            : s
+        );
         return (
           <StageDiv key="subject">
-            {Object.entries(SUBJECTS).map((s) => (
-              <PickerButton
-                key={s[0]}
-                onClick={() => {
-                  setData({ ...data, subject: s[0] });
-                  setStage(stage + 1);
-                }}
-              >
-                {s[1]}
-              </PickerButton>
-            ))}
+            <div className="flex justify-center mb-8">
+              <input
+                autoFocus
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="font-mono w-60 placeholder:font-mono outline-none border-b-2 border-black"
+                placeholder="Keress itt"
+              />
+              <IconSearch className="ml-2" />
+            </div>
+            {filtered.length > 0 ? (
+              filtered.map((s) => {
+                return (
+                  !missingExams.some(
+                    (e) =>
+                      JSON.stringify(e) ===
+                      JSON.stringify({
+                        year: data.year || 0,
+                        phase: data.phase || "fall",
+                        difficulty: data.difficulty || "mid",
+                        subject: s[0] || "",
+                      })
+                  ) && (
+                    <PickerButton
+                      key={s[0]}
+                      onClick={() => {
+                        setData({ ...data, subject: s[0] });
+                        setStage(stage + 1);
+                      }}
+                    >
+                      {s[1]}
+                    </PickerButton>
+                  )
+                );
+              })
+            ) : (
+              <p className="mt-3 font-mono opacity-60">
+                Ilyen tantárgy nincs. 🤫
+              </p>
+            )}
           </StageDiv>
         );
       case Stage.DLOAD:
-        return <div>Downloading...</div>;
+        const Sep = () => (
+          <span className="block w-5 h-[3px] mx-7 translate-y-0.5 bg-zinc-500 rounded-full" />
+        );
+        return (
+          <StageDiv key="dl">
+            <h2 className="mb-10 font-mono font-semibold text-2xl flex items-center justify-center capitalize">
+              {data.year}
+              <Sep />
+              {humanPhase[data.phase!]}
+              <Sep />
+              {humanDiff[data.difficulty!]}
+              <Sep />
+              {SUBJECTS[data.subject!]}
+            </h2>
+            <PickerButton
+              key="fl"
+              onClick={() => (window.location.href = urlConstructor(data))}
+            >
+              Feladatlap
+            </PickerButton>
+            <PickerButton
+              key="ut"
+              onClick={() =>
+                (window.location.href = urlConstructor(data, true))
+              }
+            >
+              Megoldás
+            </PickerButton>
+          </StageDiv>
+        );
       default:
         return <h2>App error!</h2>;
     }
