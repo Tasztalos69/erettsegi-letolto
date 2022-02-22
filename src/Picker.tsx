@@ -49,6 +49,15 @@ const humanDiff: Indexable = {
   high: "emelt szint",
 };
 
+const audioSubjects = [
+  "angol",
+  "nemet",
+  "francia",
+  "spanyol",
+  "orosz",
+  "olasz",
+];
+
 const StageDiv = (props: any) => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -62,12 +71,6 @@ const StageDiv = (props: any) => (
 const Picker = ({ stage, setStage }: StageProps): ReactElement => {
   const [data, setData] = useState<Partial<ExamData>>({});
   const [search, setSearch] = useState("");
-
-  // useEffect(() => {
-  //   if (stage === Stage.DLOAD) {
-  //     window.location.href = urlConstructor(data);
-  //   }
-  // }, [stage, data]);
 
   const getStage = () => {
     switch (stage) {
@@ -205,12 +208,14 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
               {SUBJECTS[data.subject!]}
               <span className="block absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-1 bg-teal-400 opacity-60 rounded-full" />
             </h2>
-            <PickerButton
-              key="fl"
-              onClick={() => window.open(urlConstructor(data, "fl"))}
-            >
-              Feladatlap
-            </PickerButton>
+            {data.subject !== "tarspr" && (
+              <PickerButton
+                key="fl"
+                onClick={() => window.open(urlConstructor(data, "fl"))}
+              >
+                Feladatlap
+              </PickerButton>
+            )}
             {data.subject === "inf" && (
               <PickerButton
                 key="for"
@@ -219,11 +224,19 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
                 Forrás
               </PickerButton>
             )}
+            {audioSubjects.includes(data.subject!) && (
+              <PickerButton
+                key="hang"
+                onClick={() => window.open(urlConstructor(data, "hang"))}
+              >
+                Hanganyag
+              </PickerButton>
+            )}
             <PickerButton
               key="ut"
               onClick={() => window.open(urlConstructor(data, "ut"))}
             >
-              Megoldás
+              {data.subject === "tarspr" ? "Útmutató" : "Megoldás"}
             </PickerButton>
           </StageDiv>
         );

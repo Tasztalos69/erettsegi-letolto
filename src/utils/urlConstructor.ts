@@ -52,20 +52,21 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   }
 
   let filetype;
+  let isFor = false;
   switch (srcType) {
     case "for":
       filetype = "zip";
+      isFor = true;
+      srcType = "fl";
       break;
     case "fl":
     case "ut":
       filetype = "pdf";
       break;
-  }
-
-  let isFor = false;
-  if (srcType === "for") {
-    isFor = true;
-    srcType = "fl";
+    case "hang":
+      filetype = "mp3";
+      srcType = "fl";
+      break;
   }
 
   const subject = data.subject + (isFor ? "for" : "");

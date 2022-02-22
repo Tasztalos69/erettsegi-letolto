@@ -18,4 +18,4 @@ export interface ExamData {
   subject: string; // TODO subject list
 }
 
-export type SrcType = "fl" | "ut" | "for";
+export type SrcType = "fl" | "ut" | "for" | "hang";
