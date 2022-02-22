@@ -20,7 +20,7 @@ const Legend = ({ stage, setStage }: StageProps) => {
     <div className="w-1/5 absolute right-0 top-0 translate-x-[110%]">
       <ul>
         {stageNames.map((n, i) => {
-          const completed = stage > i;
+          const completed = stage > i || stage === stageNames.length - 1;
           return (
             <li
               onClick={() => completed && setStage(i)}
