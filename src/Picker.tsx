@@ -135,11 +135,15 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
         );
 
       case Stage.SUBJECT:
-        const filtered = Object.entries(SUBJECTS).filter((s) =>
-          search.length > 0
-            ? s[1].toLowerCase().includes(search.toLowerCase())
-            : s
-        );
+        const filtered = Object.entries(SUBJECTS)
+          .filter((s) =>
+            search.length > 0
+              ? s[1].toLowerCase().includes(search.toLowerCase())
+              : s
+          )
+          .filter((s) =>
+            data.difficulty === "high" ? s[0] !== "tarspr" : s[0] !== "tars"
+          );
         return (
           <StageDiv key="subject">
             <div className="flex justify-center mb-8">
@@ -187,11 +191,11 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
         );
       case Stage.DLOAD:
         const Sep = () => (
-          <span className="block w-5 h-[3px] mx-7 translate-y-0.5 bg-zinc-500 rounded-full" />
+          <span className="block w-1.5 h-1.5 mx-5 translate-y-0.5 bg-zinc-500 rounded-full" />
         );
         return (
-          <StageDiv key="dl">
-            <h2 className="mb-10 font-mono font-semibold text-2xl flex items-center justify-center capitalize">
+          <StageDiv key="dl" className="text-center">
+            <h2 className="relative flex items-center justify-center w-min mx-auto mb-16 font-mono font-medium whitespace-nowrap text-2xl capitalize">
               {data.year}
               <Sep />
               {humanPhase[data.phase!]}
@@ -199,21 +203,34 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
               {humanDiff[data.difficulty!]}
               <Sep />
               {SUBJECTS[data.subject!]}
+              <span className="block absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-1 bg-teal-400 opacity-60 rounded-full" />
             </h2>
             <PickerButton
               key="fl"
-              onClick={() => (window.location.href = urlConstructor(data))}
+              onClick={() =>
+                (window.location.href = urlConstructor(data, "fl"))
+              }
             >
               Feladatlap
             </PickerButton>
             <PickerButton
               key="ut"
               onClick={() =>
-                (window.location.href = urlConstructor(data, true))
+                (window.location.href = urlConstructor(data, "ut"))
               }
             >
               Megoldás
             </PickerButton>
+            {(data.subject === "inf" || data.subject === "info") && (
+              <PickerButton
+                key="for"
+                onClick={() =>
+                  (window.location.href = urlConstructor(data, "for"))
+                }
+              >
+                Megoldás
+              </PickerButton>
+            )}
           </StageDiv>
         );
       default:

@@ -17,3 +17,5 @@ export interface ExamData {
   difficulty: "mid" | "high";
   subject: string; // TODO subject list
 }
+
+export type SrcType = "fl" | "ut" | "for";

@@ -1,13 +1,12 @@
-import { ExamData } from "../types";
+import { ExamData, SrcType } from "../types";
 
-const urlConstructor = (data: Partial<ExamData>, isKey = false): string => {
+const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   if (!data.difficulty || !data.phase || !data.subject || !data.year)
     throw Error("Not enough parameters!");
   const year = data.year.toString();
   const phase = data.phase === "fall" ? "osz" : "tavasz";
   let month = data.phase === "fall" ? "okt" : "maj";
   const diff = data.difficulty === "mid" ? "kozep" : "emelt";
-  const type = isKey ? "ut" : "fl";
 
   // IT is named info instead of inf until 2011
   if (
@@ -52,39 +51,47 @@ const urlConstructor = (data: Partial<ExamData>, isKey = false): string => {
     month = "nov";
   }
 
+  let isFor = false;
+  if (srcType === "for") {
+    isFor = true;
+    srcType = "fl";
+  }
+
+  const subject = data.subject + isFor ? "for" : "";
+
   // 2012 custom scheme #1
   if (data.year === 2012 && data.phase === "fall")
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${diff}_${year}${phase}/${diff.substring(
       0,
       1
-    )}_${data.subject}_${year.substring(2, 4)}${month}_${type}.pdf`;
+    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
 
   // 2012 custom scheme #2
   if (data.year === 2012 && data.phase === "spring")
     return `https://www.oktatas.hu/pub_bin/dload/kozoktatas/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1
-    )}_${data.subject}_${year.substring(2, 4)}${month}_${type}.pdf`;
+    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
 
   // First exam custom scheme
   if (data.year === 2005 && data.phase === "spring")
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1
-    )}_${data.subject}_${type}.pdf`;
+    )}_${subject}_${srcType}.pdf`;
 
   // Old scheme before 2012
   if (data.year < 2012)
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1
-    )}_${data.subject}_${year.substring(2, 4)}${month}_${type}.pdf`;
+    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
 
   // New scheme from 2013
   return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${year}${phase}_${diff}/${diff.substring(
     0,
     1
-  )}_${data.subject}_${year.substring(2, 4)}${month}_${type}.pdf`;
+  )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.pdf`;
 };
 
 export default urlConstructor;
