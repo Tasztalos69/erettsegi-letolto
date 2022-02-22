@@ -207,30 +207,24 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
             </h2>
             <PickerButton
               key="fl"
-              onClick={() =>
-                (window.location.href = urlConstructor(data, "fl"))
-              }
+              onClick={() => window.open(urlConstructor(data, "fl"))}
             >
               Feladatlap
             </PickerButton>
+            {data.subject === "inf" && (
+              <PickerButton
+                key="for"
+                onClick={() => window.open(urlConstructor(data, "for"))}
+              >
+                Forrás
+              </PickerButton>
+            )}
             <PickerButton
               key="ut"
-              onClick={() =>
-                (window.location.href = urlConstructor(data, "ut"))
-              }
+              onClick={() => window.open(urlConstructor(data, "ut"))}
             >
               Megoldás
             </PickerButton>
-            {(data.subject === "inf" || data.subject === "info") && (
-              <PickerButton
-                key="for"
-                onClick={() =>
-                  (window.location.href = urlConstructor(data, "for"))
-                }
-              >
-                Megoldás
-              </PickerButton>
-            )}
           </StageDiv>
         );
       default:
