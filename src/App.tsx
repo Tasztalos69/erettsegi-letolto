@@ -6,7 +6,7 @@ import { Stage } from "./types";
 const App = () => {
   const [stage, setStage] = useState<Stage>(0);
   return (
-    <div className="container">
+    <div className="container mx-auto">
       <h1 className="text-5xl font-mono text-center font-bold uppercase mt-24">
         Érettségi letöltő
       </h1>
