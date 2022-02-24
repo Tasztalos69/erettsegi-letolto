@@ -12,19 +12,19 @@ const Adatvedelem = ({ update }: { update: any }) => {
 
   return (
     <>
-      <div className="relative w-4/5 lg:w-2/5 mx-auto font-mono">
-        <h1 className="text-5xl text-center font-bold uppercase mt-24 mb-24">
+      <div className="relative w-10/12 lg:w-2/5 mx-auto font-mono">
+        <h1 className="lg:text-5xl text-3xl text-center font-bold uppercase mt-24 mb-24">
           Adatvédelem
         </h1>
         <p
-          className="w-4/5 mx-auto text-justify"
+          className="lg:w-4/5  mx-auto text-justify"
           style={{ textAlignLast: "center" }}
         >
           Az oldal alapértelmezetten anonim adatokat gyűjt a felhasználókról
           kizárólag statisztikai célokból. Amennyiben ezt nem szeretnéd, kérlek
           használd az alábbi gombokat.
         </p>
-        <div className="flex justify-center items-center my-10">
+        <div className="flex xl:flex-row flex-col justify-center items-center my-10 whitespace-nowrap">
           <button
             className="px-8 py-3 m-2 text-lg font-medium font-mono rounded border-2 border-gray-900 xl:hover:scale-105 xl:hover:shadow-lg xl:hover:shadow-red-500/60 transition-all duration-100 first-letter:uppercase"
             onClick={() => {
@@ -60,7 +60,7 @@ const Adatvedelem = ({ update }: { update: any }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center w-80 h-16 rounded-lg border-2 border-black shadow-md shadow-teal-400/60"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center w-80 h-16 bg-white rounded-lg border-2 border-black shadow-md shadow-teal-400/60"
           >
             <IconCheck />
             <p className="font-mono font-medium ml-2">
