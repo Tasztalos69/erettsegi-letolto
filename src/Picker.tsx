@@ -151,11 +151,11 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
           <StageDiv key="subject">
             <div className="flex justify-center mb-8">
               <input
-                autoFocus
+                autoFocus={window.innerWidth >= 1024}
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="font-mono w-60 placeholder:font-mono outline-none border-b-2 border-black"
+                className="font-mono w-60 placeholder:font-mono outline-none border-b-2 border-black rounded-none"
                 placeholder="Keress itt"
               />
               <IconSearch className="ml-2" />
@@ -193,12 +193,15 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
           </StageDiv>
         );
       case Stage.DLOAD:
-        const Sep = () => (
-          <span className="block w-1.5 h-1.5 mx-5 translate-y-0.5 bg-zinc-500 rounded-full" />
-        );
+        const Sep = () =>
+          window.innerWidth >= 1280 ? (
+            <span className="hidden lg:block w-1.5 h-1.5 mx-5 translate-y-0.5 bg-zinc-500 rounded-full" />
+          ) : (
+            <br />
+          );
         return (
           <StageDiv key="dl" className="text-center">
-            <h2 className="relative flex items-center justify-center w-min mx-auto mb-16 font-mono font-medium whitespace-nowrap text-2xl capitalize">
+            <h2 className="relative block lg:flex items-center justify-center w-min mx-auto mb-16 font-mono font-medium lg:whitespace-nowrap text-2xl capitalize">
               {data.year}
               <Sep />
               {humanPhase[data.phase!]}
@@ -206,7 +209,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
               {humanDiff[data.difficulty!]}
               <Sep />
               {SUBJECTS[data.subject!]}
-              <span className="block absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-1 bg-teal-400 opacity-60 rounded-full" />
+              <span className="hidden lg:block absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-1 bg-teal-400 opacity-60 rounded-full" />
             </h2>
             {data.subject !== "tarspr" && (
               <PickerButton
@@ -246,7 +249,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center mb-24 lg:mb-0">
       <AnimatePresence initial={false} exitBeforeEnter>
         {getStage()}
       </AnimatePresence>

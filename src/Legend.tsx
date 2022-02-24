@@ -17,7 +17,7 @@ const BoxWrapper = (props: any) => (
 
 const Legend = ({ stage, setStage }: StageProps) => {
   return (
-    <div className="w-1/5 absolute right-0 top-0 translate-x-[110%]">
+    <div className="hidden lg:block w-1/5 absolute right-0 top-0 translate-x-[110%]">
       <ul>
         {stageNames.map((n, i) => {
           const completed = stage > i || stage === stageNames.length - 1;

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Adatvedelem = ({ update }: { update: any }) => {
   return (
-    <div className="relative w-2/5 mx-auto font-mono">
+    <div className="relative w-4/5 lg:w-2/5 mx-auto font-mono">
       <h1 className="text-5xl text-center font-bold uppercase mt-24 mb-24">
         Adatvédelem
       </h1>
@@ -16,7 +16,7 @@ const Adatvedelem = ({ update }: { update: any }) => {
       </p>
       <div className="flex justify-center items-center my-10">
         <button
-          className="px-8 py-3 m-2 text-lg font-medium font-mono rounded border-2 border-gray-900 hover:scale-105 hover:shadow-lg hover:shadow-red-500/60 transition-all duration-100 first-letter:uppercase"
+          className="px-8 py-3 m-2 text-lg font-medium font-mono rounded border-2 border-gray-900 xl:hover:scale-105 xl:hover:shadow-lg xl:hover:shadow-red-500/60 transition-all duration-100 first-letter:uppercase"
           onClick={() => {
             localStorage.setItem("disable-data-collection", "true");
             update();
@@ -25,7 +25,7 @@ const Adatvedelem = ({ update }: { update: any }) => {
           Hagyj ki engem!
         </button>
         <button
-          className="px-8 py-3 m-2 text-lg font-medium font-mono rounded border-2 border-gray-900 hover:scale-105 hover:shadow-lg hover:shadow-teal-300/60 transition-all duration-100 first-letter:uppercase"
+          className="px-8 py-3 m-2 text-lg font-medium font-mono rounded border-2 border-gray-900 xl:hover:scale-105 xl:hover:shadow-lg xl:hover:shadow-teal-300/60 transition-all duration-100 first-letter:uppercase"
           onClick={() => {
             localStorage.removeItem("disable-data-collection");
             update();

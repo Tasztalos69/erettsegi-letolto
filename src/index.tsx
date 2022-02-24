@@ -37,7 +37,6 @@ const Wrapper = () => {
           />
         </Routes>
       </Router>
-      ;
     </>
   );
 };
