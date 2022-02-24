@@ -63,7 +63,7 @@ const Adatvedelem = ({ update }: { update: any }) => {
             className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center w-80 h-16 rounded-lg border-2 border-black shadow-md shadow-teal-400/60"
           >
             <IconCheck />
-            <p className="font-mono font-medium ml-">
+            <p className="font-mono font-medium ml-2">
               A változásokat mentettük.
             </p>
           </motion.div>
