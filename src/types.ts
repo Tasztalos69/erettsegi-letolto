@@ -9,13 +9,19 @@ export enum Stage {
 export interface StageProps {
   stage: number;
   setStage: (num: number) => void;
+  data: Partial<ExamData>;
+  setData: (data: Partial<ExamData>) => void;
 }
 
 export interface ExamData {
   year: number;
-  phase: "fall" | "spring";
-  difficulty: "mid" | "high";
+  phase: "osz" | "tavasz";
+  difficulty: "kozep" | "emelt";
   subject: string; // TODO subject list
+}
+
+export interface Indexable {
+  [key: string]: string;
 }
 
 export type SrcType = "fl" | "ut" | "for" | "hang";

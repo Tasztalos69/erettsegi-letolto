@@ -4,14 +4,13 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   if (!data.difficulty || !data.phase || !data.subject || !data.year)
     throw Error("Not enough parameters!");
   const year = data.year.toString();
-  const phase = data.phase === "fall" ? "osz" : "tavasz";
-  let month = data.phase === "fall" ? "okt" : "maj";
-  const diff = data.difficulty === "mid" ? "kozep" : "emelt";
+  const { phase, difficulty: diff } = data;
+  let month = data.phase === "osz" ? "okt" : "maj";
 
   // IT is named info instead of inf until 2011
   if (
     data.subject === "inf" &&
-    (data.year < 2011 || (data.year === 2011 && data.phase === "spring"))
+    (data.year < 2011 || (data.year === 2011 && data.phase === "tavasz"))
   ) {
     data.subject = "info";
   }
@@ -19,7 +18,7 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   // Fiz is fizika in 2008 AND 2005 fall
   if (
     (data.year === 2008 || data.year === 2005) &&
-    data.phase === "fall" &&
+    data.phase === "osz" &&
     data.subject === "fiz"
   ) {
     data.subject = "fizika";
@@ -28,7 +27,7 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   // Kem is kemia before 2008 AND in 2010 fall
   if (
     (data.year <= 2008 && data.subject === "kem") ||
-    (data.year === 2010 && data.phase === "fall" && data.subject === "kem")
+    (data.year === 2010 && data.phase === "osz" && data.subject === "kem")
   ) {
     data.subject = "kemia";
   }
@@ -45,7 +44,7 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   ];
   if (
     data.year === 2005 &&
-    data.phase === "fall" &&
+    data.phase === "osz" &&
     novemberSubjectsIn2005.includes(data.subject)
   ) {
     month = "nov";
@@ -72,21 +71,21 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   const subject = data.subject + (isFor ? "for" : "");
 
   // 2012 custom scheme #1
-  if (data.year === 2012 && data.phase === "fall")
+  if (data.year === 2012 && data.phase === "osz")
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${diff}_${year}${phase}/${diff.substring(
       0,
       1
     )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
 
   // 2012 custom scheme #2
-  if (data.year === 2012 && data.phase === "spring")
+  if (data.year === 2012 && data.phase === "tavasz")
     return `https://www.oktatas.hu/pub_bin/dload/kozoktatas/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1
     )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
 
   // First exam custom scheme
-  if (data.year === 2005 && data.phase === "spring")
+  if (data.year === 2005 && data.phase === "tavasz")
     return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
       0,
       1

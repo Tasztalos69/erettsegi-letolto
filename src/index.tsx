@@ -30,11 +30,11 @@ const Wrapper = () => {
       </Helmet>
       <Router>
         <Routes>
-          <Route path="/" element={<App />} />
           <Route
             path="/adatvedelem"
             element={<Adatvedelem update={update} />}
           />
+          <Route path="*" element={<App />} />
         </Routes>
       </Router>
     </>

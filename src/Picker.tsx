@@ -2,21 +2,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement, useState } from "react";
 
 import PickerButton from "./components/PickerButton";
-import { ExamData, Stage, StageProps } from "./types";
+import { ExamData, Indexable, Stage, StageProps } from "./types";
 import urlConstructor from "./utils/urlConstructor";
 
 import missingExams from "./missing-exams.json";
 import { IconSearch } from "@tabler/icons";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const YEARS = Array(2021 - 2005 + 1)
+// TODO Add upcoming years
+export const YEARS = Array(2021 - 2005 + 1)
   .fill(0)
   .map((x, i) => x + 2005 + i);
 
-interface Indexable {
-  [key: string]: string;
-}
-
-const SUBJECTS: Indexable = {
+export const SUBJECTS: Indexable = {
   mat: "Matematika",
   magyir: "Magyar nyelv és irodalom",
   tort: "Történelem",
@@ -40,13 +38,13 @@ const SUBJECTS: Indexable = {
 };
 
 const humanPhase: Indexable = {
-  fall: "ősz",
-  spring: "tavasz",
+  osz: "ősz",
+  tavasz: "tavasz",
 };
 
 const humanDiff: Indexable = {
-  mid: "középszint",
-  high: "emelt szint",
+  kozep: "középszint",
+  emelt: "emelt szint",
 };
 
 const audioSubjects = [
@@ -68,9 +66,27 @@ const StageDiv = (props: any) => (
   />
 );
 
-const Picker = ({ stage, setStage }: StageProps): ReactElement => {
-  const [data, setData] = useState<Partial<ExamData>>({});
+const Picker = ({
+  stage,
+  setStage,
+  data,
+  setData,
+}: StageProps): ReactElement => {
   const [search, setSearch] = useState("");
+  const loc = useLocation();
+  const nav = useNavigate();
+  const path = loc.pathname.split("/");
+  path.shift();
+
+  const replaceUrl = (part: string) => {
+    nav(path.join("/") + "/" + part);
+  };
+
+  const addData = (newData: Partial<ExamData>, newPart: string) => {
+    setData({ ...data, ...newData });
+    replaceUrl(newPart);
+    setStage(stage + 1);
+  };
 
   const getStage = () => {
     switch (stage) {
@@ -78,13 +94,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
         return (
           <StageDiv key="year">
             {YEARS.map((y) => (
-              <PickerButton
-                key={y}
-                onClick={() => {
-                  setData({ ...data, year: y });
-                  setStage(stage + 1);
-                }}
-              >
+              <PickerButton key={y} onClick={() => addData({ year: y }, y)}>
                 {y}
               </PickerButton>
             ))}
@@ -95,21 +105,15 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
           <StageDiv key="phase">
             <PickerButton
               key="tavasz"
-              onClick={() => {
-                setData({ ...data, phase: "spring" });
-                setStage(stage + 1);
-              }}
+              onClick={() => addData({ phase: "tavasz" }, "tavasz")}
             >
-              {humanPhase["spring"]}
+              {humanPhase["tavasz"]}
             </PickerButton>
             <PickerButton
               key="osz"
-              onClick={() => {
-                setData({ ...data, phase: "fall" });
-                setStage(stage + 1);
-              }}
+              onClick={() => addData({ phase: "osz" }, "osz")}
             >
-              {humanPhase["fall"]}
+              {humanPhase["osz"]}
             </PickerButton>
           </StageDiv>
         );
@@ -118,21 +122,15 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
           <StageDiv key="diff">
             <PickerButton
               key="kozep"
-              onClick={() => {
-                setData({ ...data, difficulty: "mid" });
-                setStage(stage + 1);
-              }}
+              onClick={() => addData({ difficulty: "kozep" }, "kozep")}
             >
-              {humanDiff["mid"]}
+              {humanDiff["kozep"]}
             </PickerButton>
             <PickerButton
               key="emelt"
-              onClick={() => {
-                setData({ ...data, difficulty: "high" });
-                setStage(stage + 1);
-              }}
+              onClick={() => addData({ difficulty: "emelt" }, "emelt")}
             >
-              {humanDiff["high"]}
+              {humanDiff["emelt"]}
             </PickerButton>
           </StageDiv>
         );
@@ -145,7 +143,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
               : s
           )
           .filter((s) =>
-            data.difficulty === "high" ? s[0] !== "tarspr" : s[0] !== "tars"
+            data.difficulty === "emelt" ? s[0] !== "tarspr" : s[0] !== "tars"
           );
         return (
           <StageDiv key="subject">
@@ -175,10 +173,7 @@ const Picker = ({ stage, setStage }: StageProps): ReactElement => {
                   ) && (
                     <PickerButton
                       key={s[0]}
-                      onClick={() => {
-                        setData({ ...data, subject: s[0] });
-                        setStage(stage + 1);
-                      }}
+                      onClick={() => addData({ subject: s[0] }, s[0])}
                     >
                       {s[1]}
                     </PickerButton>

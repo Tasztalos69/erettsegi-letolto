@@ -1,12 +1,27 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Legend from "./Legend";
 import Picker from "./Picker";
-import { Stage } from "./types";
+import { ExamData, Stage } from "./types";
+import propagatePath from "./utils/propagatePath";
 
 const App = () => {
   const [stage, setStage] = useState<Stage>(0);
+  const [data, setData] = useState<Partial<ExamData>>({});
+  const loc = useLocation();
+  const nav = useNavigate();
+  const path = loc.pathname.split("/");
+  path.shift();
+
+  useEffect(() => {
+    const [newData, newStage, newPath] = propagatePath(path);
+    setData(newData);
+    setStage(newStage);
+    path.length > 1 && path.unshift("/");
+    loc.pathname !== newPath && nav(newPath);
+  }, [loc.pathname]);
+
   return (
     <>
       <div className="relative container mx-auto min-h-[75vh] xl:min-h-[80vh]">
@@ -14,8 +29,18 @@ const App = () => {
           Érettségi letöltő
         </h1>
         <div className="container relative w-11/12 lg:w-3/5 mx-auto mt-20">
-          <Picker stage={stage} setStage={setStage} />
-          <Legend stage={stage} setStage={setStage} />
+          <Picker
+            stage={stage}
+            setStage={setStage}
+            data={data}
+            setData={setData}
+          />
+          <Legend
+            stage={stage}
+            setStage={setStage}
+            data={data}
+            setData={setData}
+          />
           <AnimatePresence>
             {stage > 0 && (
               <motion.button
@@ -26,7 +51,10 @@ const App = () => {
                 whileHover={{
                   color: "rgb(45 212 191)",
                 }}
-                onClick={() => stage > 0 && setStage(stage - 1)}
+                onClick={() => {
+                  path.pop();
+                  nav(path.join("/"));
+                }}
                 className="block lg:absolute lg:-left-4 lg:bottom-auto lg:top-0 lg:-translate-x-full mx-auto text-lg font-mono font-semibold uppercase underline"
               >
                 Vissza
