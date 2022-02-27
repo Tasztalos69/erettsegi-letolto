@@ -63,7 +63,7 @@ const App = () => {
           </AnimatePresence>
         </div>
         <footer className="absolute xl:bottom-0 translate-y-full xl:translate-y-none -bottom-4 left-1/2 -translate-x-1/2 text-zinc-400 font-mono text-center">
-          <a href="mailto:tasztalos69@gmail.com" className="mx-4">
+          <a href="mailto:bmk@jelszo.co" className="mx-4">
             Elérhetőség
           </a>
           •
