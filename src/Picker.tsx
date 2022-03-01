@@ -38,8 +38,8 @@ export const SUBJECTS: Indexable = {
 };
 
 const humanPhase: Indexable = {
-  osz: "ősz",
-  tavasz: "tavasz",
+  osz: "ősz (október-november)",
+  tavasz: "tavasz (május-június)",
 };
 
 const humanDiff: Indexable = {
@@ -199,7 +199,7 @@ const Picker = ({
             <h2 className="relative block lg:flex items-center justify-center w-min mx-auto mb-16 font-mono font-medium lg:whitespace-nowrap text-2xl capitalize">
               {data.year}
               <Sep />
-              {humanPhase[data.phase!]}
+              {humanPhase[data.phase!].split("(")[0]}
               <Sep />
               {humanDiff[data.difficulty!]}
               <Sep />
