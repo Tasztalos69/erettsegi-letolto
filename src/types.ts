@@ -24,4 +24,4 @@ export interface Indexable {
   [key: string]: string;
 }
 
-export type SrcType = "fl" | "ut" | "for" | "hang";
+export type SrcType = "fl" | "ut" | "for" | "meg" | "hang";

@@ -215,12 +215,20 @@ const Picker = ({
               </PickerButton>
             )}
             {data.subject === "inf" && (
-              <PickerButton
-                key="for"
-                onClick={() => window.open(urlConstructor(data, "for"))}
-              >
-                Forrás
-              </PickerButton>
+              <>
+                <PickerButton
+                  key="for"
+                  onClick={() => window.open(urlConstructor(data, "for"))}
+                >
+                  Forrás
+                </PickerButton>
+                <PickerButton
+                  key="mintmeg"
+                  onClick={() => window.open(urlConstructor(data, "meg"))}
+                >
+                  Mintamegoldás
+                </PickerButton>
+              </>
             )}
             {audioSubjects.includes(data.subject!) && (
               <PickerButton

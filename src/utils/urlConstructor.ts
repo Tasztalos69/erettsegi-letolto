@@ -51,12 +51,17 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   }
 
   let filetype;
-  let isFor = false;
+  let extension = "";
   switch (srcType) {
     case "for":
       filetype = "zip";
-      isFor = true;
+      extension = "for";
       srcType = "fl";
+      break;
+    case "meg":
+      filetype = "zip";
+      extension = "meg";
+      srcType = "ut";
       break;
     case "fl":
     case "ut":
@@ -68,7 +73,7 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
       break;
   }
 
-  const subject = data.subject + (isFor ? "for" : "");
+  const subject = data.subject + extension;
 
   // 2012 custom scheme #1
   if (data.year === 2012 && data.phase === "osz")
