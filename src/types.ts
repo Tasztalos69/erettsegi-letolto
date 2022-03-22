@@ -17,7 +17,7 @@ export interface ExamData {
   year: number;
   phase: "osz" | "tavasz";
   difficulty: "kozep" | "emelt";
-  subject: string; // TODO subject list
+  subject: string;
 }
 
 export interface Indexable {
@@ -25,3 +25,5 @@ export interface Indexable {
 }
 
 export type SrcType = "fl" | "ut" | "for" | "meg" | "hang";
+
+export type Nullable<T> = T | null;

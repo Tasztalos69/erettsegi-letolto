@@ -1,6 +1,5 @@
 import { IconSquare, IconSquareCheck } from "@tabler/icons";
 import { AnimatePresence, motion } from "framer-motion";
-import { StageProps } from "./types";
 
 const stageNames = ["Év", "Időszak", "Szint", "Tantárgy", "Letöltés"];
 
@@ -15,7 +14,13 @@ const BoxWrapper = (props: any) => (
   />
 );
 
-const Legend = ({ stage, setStage }: StageProps) => {
+interface LegendProps {
+  stage: number;
+  nav: any;
+  path: string[];
+}
+
+const Legend = ({ stage, nav, path }: LegendProps) => {
   return (
     <div className="hidden lg:block w-1/5 absolute right-0 top-0 translate-x-[110%]">
       <ul>
@@ -23,7 +28,12 @@ const Legend = ({ stage, setStage }: StageProps) => {
           const completed = stage > i || stage === stageNames.length - 1;
           return (
             <li
-              onClick={() => completed && setStage(i)}
+              onClick={() => {
+                if (completed) {
+                  path = path.slice(0, i);
+                  nav(path.join("/"));
+                }
+              }}
               key={n}
               className={`relative pl-8 flex items-center font-mono font-semibold text-xl my-8 first:mt-2 text-zinc-400 ${
                 completed && "text-teal-500 cursor-pointer"

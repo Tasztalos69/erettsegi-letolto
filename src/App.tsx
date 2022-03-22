@@ -35,12 +35,7 @@ const App = () => {
             data={data}
             setData={setData}
           />
-          <Legend
-            stage={stage}
-            setStage={setStage}
-            data={data}
-            setData={setData}
-          />
+          <Legend stage={stage} nav={nav} path={path} />
           <AnimatePresence>
             {stage > 0 && (
               <motion.button

@@ -1,4 +1,5 @@
-import { SUBJECTS, YEARS } from "../Picker";
+import { YEARS } from "../Picker";
+import { allSubjects } from "../subjects";
 import { ExamData } from "../types";
 
 const propagatePath = (path: string[]): [Partial<ExamData>, number, string] => {
@@ -36,7 +37,7 @@ const propagatePath = (path: string[]): [Partial<ExamData>, number, string] => {
     cont = false;
   }
 
-  if (cont && path[3] && Object.keys(SUBJECTS).includes(path[3])) {
+  if (cont && path[3] && Object.keys(allSubjects).includes(path[3])) {
     data = { ...data, subject: path[3] };
     stage++;
     currentPath.push(path[3]);
