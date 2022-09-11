@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement, useState } from "react";
 
 import PickerButton from "./components/PickerButton";
-import { ExamData, Indexable, Nullable, Stage, StageProps } from "./types";
+import { ExamData, Indexable, Stage, StageProps } from "./types";
 import urlConstructor from "./utils/urlConstructor";
 
 import missingExams from "./missing-exams.json";
@@ -11,7 +11,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { agazatok, alapTargyak, allSubjects } from "./subjects";
 
 // TODO Add upcoming years
-export const YEARS = Array(2021 - 2005 + 1)
+const maxYear =
+  new Date().getFullYear() - Number(!(new Date().getMonth() >= 5));
+export const YEARS = Array(maxYear - 2005 + 1)
   .fill(0)
   .map((x, i) => x + 2005 + i);
 
@@ -72,9 +74,20 @@ const Picker = ({
   };
 
   const addData = (newData: Partial<ExamData>, newPart: string) => {
-    setData({ ...data, ...newData });
+    // Handle if only one phase is available
+    let additionalData: Partial<ExamData> = {};
+    let plusStage = 1;
+    if (
+      newData.year === new Date().getFullYear() &&
+      new Date().getMonth() < 10
+    ) {
+      additionalData = { phase: "tavasz" };
+      plusStage++;
+      newPart += "/tavasz";
+    }
+    setData({ ...data, ...newData, ...additionalData });
     replaceUrl(newPart);
-    setStage(stage + 1);
+    setStage(stage + plusStage);
   };
 
   const getStage = () => {

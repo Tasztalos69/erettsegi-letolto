@@ -47,6 +47,13 @@ const App = () => {
                   color: "rgb(45 212 191)",
                 }}
                 onClick={() => {
+                  // Double back if no phase selection is available
+                  path.includes(String(new Date().getFullYear())) &&
+                    ["osz", "tavasz"].some(
+                      (p) => p === path[path.length - 1]
+                    ) &&
+                    new Date().getMonth() < 10 &&
+                    path.pop();
                   path.pop();
                   nav(path.join("/"));
                 }}
