@@ -173,19 +173,19 @@ const Picker = ({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="font-mono w-60 placeholder:font-mono outline-none border-b-2 border-black rounded-none"
+                className="font-mono w-60 placeholder:font-mono outline-none border-b-2 border-black dark:border-gray-50 rounded-none bg-inherit"
                 placeholder="Keress itt"
               />
               <IconSearch className="ml-2" />
               <div className="relative mx-6 w-1">
-                <span className="block absolute h-12 w-0.5 rounded-full top-1/2 -translate-y-1/2 bg-black" />
+                <span className="block absolute h-12 w-0.5 rounded-full top-1/2 -translate-y-1/2 bg-black dark:bg-gray-50" />
               </div>
               <div>
                 {["Alap tárgyak", "Ágazatok"].map((b) => (
                   <button
                     key={b}
                     className={`uppercase font-semibold font-mono mx-2 decoration-dotted ${
-                      cat === b && "text-teal-500 underline"
+                      cat === b && "dark:text-teal-500 text-teal-500 underline"
                     }`}
                     onClick={() => setCat(b as "Alap tárgyak" | "Ágazatok")}
                   >
