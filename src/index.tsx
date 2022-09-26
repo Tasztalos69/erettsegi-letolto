@@ -24,7 +24,7 @@ const Wrapper = () => {
             async
             defer
             data-website-id="e5accffe-7ac1-4ef1-8fd5-e4d8aeea4950"
-            src="https://analytics.jelszo.co/umami.js"
+            src="https://analytics.wanter.dev/umami.js"
           />
         )}
       </Helmet>
