@@ -64,7 +64,7 @@ const App = () => {
             )}
           </AnimatePresence>
         </div>
-        <footer className="absolute xl:bottom-0 translate-y-full xl:translate-y-none -bottom-4 left-1/2 -translate-x-1/2 text-zinc-400 font-mono text-center">
+        <footer className="absolute bottom-0 translate-y-full xl:translate-y-none left-1/2 -translate-x-1/2 text-zinc-400 font-mono text-center dark:bg-gray-900 py-6 w-[110vw]">
           <a href="mailto:sugarvedelem@icloud.com" className="mx-4">
             Elérhetőség
           </a>

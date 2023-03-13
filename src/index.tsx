@@ -17,7 +17,7 @@ const Wrapper = () => {
   }, [num]);
 
   return (
-    <div className="absolute top-0 left-0 dark:bg-gray-900 w-screen h-screen dark:text-gray-50">
+    <div className="absolute top-0 left-0 dark:bg-gray-900 w-screen min-h-screen dark:text-gray-50">
       <Helmet>
         {collection && (
           <script
