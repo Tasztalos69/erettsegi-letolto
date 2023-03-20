@@ -1,4 +1,4 @@
-<h1 align="center"><a href="https://erettsegi.jelszo.co">Érettségi letöltő</a></h1>
+<h1 align="center"><a href="https://erettsegi.wanter.dev">Érettségi letöltő</a></h1>
 <p align="center"><i>Érettségi feladatok könnyű letöltése az <a href="https://oktatas.hu">oktatas.hu</a>-ról</i></p>
 
 ## Miért?
