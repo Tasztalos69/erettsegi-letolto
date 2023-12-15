@@ -17,14 +17,13 @@ const Wrapper = () => {
   }, [num]);
 
   return (
-    <div className="absolute top-0 left-0 dark:bg-gray-900 w-screen min-h-screen dark:text-gray-50">
+    <div className="absolute top-0 left-0 w-screen min-h-screen dark:bg-gray-900 dark:text-gray-50">
       <Helmet>
         {collection && (
           <script
             async
-            defer
             data-website-id="e5accffe-7ac1-4ef1-8fd5-e4d8aeea4950"
-            src="https://analytics.wanter.dev/umami.js"
+            src="https://analytics.wanter.dev/script.js"
           />
         )}
       </Helmet>
