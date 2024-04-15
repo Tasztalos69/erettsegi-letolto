@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import { StrictMode, useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Helmet from "react-helmet";
-import "./index.css";
+import { Helmet } from "react-helmet";
+
 import App from "./App";
 import Adatvedelem from "./Adatvedelem";
 import useForceUpdate from "./utils/forceUpdate";
+
+import "./index.css";
 
 const Wrapper = () => {
   const [collection, setCollection] = useState(true);
@@ -39,9 +41,13 @@ const Wrapper = () => {
     </div>
   );
 };
-ReactDOM.render(
-  <React.StrictMode>
+
+const container = document.querySelector("#root");
+
+const root = createRoot(container!);
+
+root.render(
+  <StrictMode>
     <Wrapper />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </StrictMode>
 );

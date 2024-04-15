@@ -1,0 +1,46 @@
+{
+  "space": true,
+  "prettier": true,
+  "extends": ["xo-react/space"],
+  "rules": {
+    "unicorn/prevent-abbreviations": "off",
+    "react/react-in-jsx-scope": "off",
+    "import/extensions": ["error", "never"],
+    "unicorn/switch-case-braces": ["error", "avoid"],
+    "no-warning-comments": "off",
+    "no-case-declarations": "off",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always"
+      }
+    ],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true }
+      }
+    ],
+    "@typescript-eslint/no-confusing-void-expression": [
+      "error",
+      {
+        "ignoreArrowShorthand": true
+      }
+    ],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "extendDefaults": true,
+        "types": {
+          "null": false
+        }
+      }
+    ]
+  }
+}

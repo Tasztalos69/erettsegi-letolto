@@ -1,2 +1,17 @@
+# Dependencies & build
 node_modules/
-build/
+dist/
+
+# Tooling
+Dockerfile*
+.dockerignore
+.git
+.gitignore
+.vscode
+.idea
+.env
+
+# Misc
+README.md
+LICENSE.md
+.editorconfig

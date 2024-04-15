@@ -1,4 +1,4 @@
-import { Indexable } from "./types";
+import type { Indexable } from "./types";
 
 export const alapTargyak: Indexable = {
   mat: "Matematika",
@@ -47,12 +47,12 @@ export const agazatok: Indexable = {
   gepgyartas: "gépgyártás-technológiai ismeretek",
   gyakszin: "gyakorlatosszínész-ismeretek",
   hajozasi: "hajózási technikai ismeretek",
-  hang: "hang-, film- és színháztechnikai ismeretek", //!! for
+  hang: "hang-, film- és színháztechnikai ismeretek", //! for
   honvedelmi: "honvédelmi ismeretek",
   idnyeugyv: "idegennyelvű ügyviteli ismeretek",
-  infoism: "informatikai ismeretek", //!! for 2008-nofor!
-  irodaiugyv: "irodai ügyviteli ismeretek", //!! for
-  irodugyv: "irodai ügyviteli ismeretek", //!! for DUPL!
+  infoism: "informatikai ismeretek", //! for 2008-nofor!
+  irodaiugyv: "irodai ügyviteli ismeretek", //! for
+  irodugyv: "irodai ügyviteli ismeretek", //! for DUPL!
   jazz: "jazz-zenész ismeretek",
   katism: "katonai ismeretek",
   kepz: "képző- és iparművészeti ismeretek",
@@ -97,10 +97,10 @@ export const agazatok: Indexable = {
   szoc: "szociális ismeretek",
   szorak: "szórakoztatózenész-ismeretek",
   tanc: "táncos ismeretek",
-  tavkozl: "távközlési ismeretek", //!! for
+  tavkozl: "távközlési ismeretek", //! for
   termtud: "természettudomány",
   turiszt: "turisztikai ismeretek",
-  ugyvit: "ügyvitel ismeretek", //!! for 2010-forras!
+  ugyvit: "ügyvitel ismeretek", //! for 2010-forras!
   utvasuthid: "út-, vasút- és hídépítési ismeretek",
   vasutgep: "vasútgépészeti ismeretek",
   vasutuzemi:

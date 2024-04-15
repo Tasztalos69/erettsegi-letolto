@@ -1,15 +1,18 @@
 # build environment
-FROM node:lts-alpine3.14 as build
+FROM oven/bun:1 as base
 WORKDIR /app
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn install --frozen-lockfile --sient
-COPY . ./
-RUN yarn build
+
+# Install dependencies
+FROM base AS build
+ENV NODE_ENV=production
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
+COPY . .
+RUN bun run build
 
 # production environment
 FROM nginx:stable-alpine
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 # new
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

@@ -1,18 +1,18 @@
-import { YEARS } from "../Picker";
+import { Years } from "../Picker";
 import { allSubjects } from "../subjects";
-import { ExamData } from "../types";
+import type { ExamData } from "../types";
 
 const propagatePath = (path: string[]): [Partial<ExamData>, number, string] => {
   let data: Partial<ExamData> = {};
   let stage = 0;
-  let currentPath: string[] = [];
+  const currentPath: string[] = [];
   let cont = true;
 
   if (
     path[0] &&
     Number(path[0]) &&
-    2005 <= Number(path[0]) &&
-    Math.max(...YEARS) >= Number(path[0])
+    Number(path[0]) >= 2005 &&
+    Math.max(...Years) >= Number(path[0])
   ) {
     data = { ...data, year: Number(path[0]) };
     stage++;

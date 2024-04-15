@@ -6,23 +6,21 @@ export enum Stage {
   DLOAD,
 }
 
-export interface StageProps {
-  stage: number;
+export type StageProps = {
+  stage: Stage;
   setStage: (num: number) => void;
   data: Partial<ExamData>;
   setData: (data: Partial<ExamData>) => void;
-}
+};
 
-export interface ExamData {
+export type ExamData = {
   year: number;
   phase: "osz" | "tavasz";
   difficulty: "kozep" | "emelt";
   subject: string;
-}
+};
 
-export interface Indexable {
-  [key: string]: string;
-}
+export type Indexable = Record<string, string>;
 
 export type SrcType = "fl" | "ut" | "for" | "meg" | "hang";
 

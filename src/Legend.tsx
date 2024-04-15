@@ -1,5 +1,6 @@
-import { IconSquare, IconSquareCheck } from "@tabler/icons";
+import { IconSquare, IconSquareCheck } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
+import type { NavigateFunction } from "react-router-dom";
 
 const stageNames = ["Év", "Időszak", "Szint", "Tantárgy", "Letöltés"];
 
@@ -10,15 +11,15 @@ const BoxWrapper = (props: any) => (
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ delay: 0, duration: 0.7 }}
-    className="absolute left-0 top-1/2 -translate-y-1/2 origin-center"
+    className="absolute left-0 origin-center -translate-y-1/2 top-1/2"
   />
 );
 
-interface LegendProps {
-  stage: number;
-  nav: any;
-  path: string[];
-}
+type LegendProps = {
+  readonly stage: number;
+  readonly nav: NavigateFunction;
+  readonly path: string[];
+};
 
 const Legend = ({ stage, nav, path }: LegendProps) => {
   return (
@@ -28,16 +29,16 @@ const Legend = ({ stage, nav, path }: LegendProps) => {
           const completed = stage > i || stage === stageNames.length - 1;
           return (
             <li
+              key={n}
+              className={`relative pl-8 flex items-center font-mono font-semibold text-xl my-8 first:mt-2 text-zinc-400 ${
+                completed && "text-teal-500 cursor-pointer"
+              } transition-all duration-700`}
               onClick={() => {
                 if (completed) {
                   path = path.slice(0, i);
                   nav(path.join("/"));
                 }
               }}
-              key={n}
-              className={`relative pl-8 flex items-center font-mono font-semibold text-xl my-8 first:mt-2 text-zinc-400 ${
-                completed && "text-teal-500 cursor-pointer"
-              } transition-all duration-700`}
             >
               <AnimatePresence initial={false}>
                 {completed ? (

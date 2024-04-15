@@ -1,8 +1,9 @@
-import { ExamData, SrcType } from "../types";
+import type { ExamData, SrcType } from "../types";
 
+// eslint-disable-next-line complexity
 const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
   if (!data.difficulty || !data.phase || !data.subject || !data.year)
-    throw Error("Not enough parameters!");
+    throw new Error("Not enough parameters!");
   const year = data.year.toString();
   const { phase, difficulty: diff } = data;
   let month = data.phase === "osz" ? "okt" : "maj";
@@ -77,37 +78,37 @@ const urlConstructor = (data: Partial<ExamData>, srcType: SrcType): string => {
 
   // 2012 custom scheme #1
   if (data.year === 2012 && data.phase === "osz")
-    return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${diff}_${year}${phase}/${diff.substring(
+    return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${diff}_${year}${phase}/${diff.slice(
       0,
       1
-    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
+    )}_${subject}_${year.slice(2, 4)}${month}_${srcType}.${filetype}`;
 
   // 2012 custom scheme #2
   if (data.year === 2012 && data.phase === "tavasz")
-    return `https://www.oktatas.hu/pub_bin/dload/kozoktatas/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
+    return `https://www.oktatas.hu/pub_bin/dload/kozoktatas/erettsegi/feladatok${year}${phase}/${diff}/${diff.slice(
       0,
       1
-    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
+    )}_${subject}_${year.slice(2, 4)}${month}_${srcType}.${filetype}`;
 
   // First exam custom scheme
   if (data.year === 2005 && data.phase === "tavasz")
-    return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
+    return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.slice(
       0,
       1
     )}_${subject}_${srcType}.${filetype}`;
 
   // Old scheme before 2012
   if (data.year < 2012)
-    return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.substring(
+    return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok${year}${phase}/${diff}/${diff.slice(
       0,
       1
-    )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
+    )}_${subject}_${year.slice(2, 4)}${month}_${srcType}.${filetype}`;
 
   // New scheme from 2013
-  return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${year}${phase}_${diff}/${diff.substring(
+  return `https://www.oktatas.hu/bin/content/dload/erettsegi/feladatok_${year}${phase}_${diff}/${diff.slice(
     0,
     1
-  )}_${subject}_${year.substring(2, 4)}${month}_${srcType}.${filetype}`;
+  )}_${subject}_${year.slice(2, 4)}${month}_${srcType}.${filetype}`;
 };
 
 export default urlConstructor;

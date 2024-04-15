@@ -5,9 +5,8 @@
 Az oktatas.hu-n bár kategorikusan fent van az összes érettségi feladat, forrás és megoldás, minden alkalommal végignavigálni az oldalon és kikeresni a megfelelő feladatot egy idő után unalmas, fárasztó, de leginkább elvesztegetett idő. Ezt a folyamatot meggyorsítandó az Érettségi letöltő, ahol gyorsan és egyszerűen lehet kikeresni az adott feladatot / megoldást.
 
 ## Technológiák
-* **[React](https://reactjs.org) ([Create React App](https://create-react-app.dev))**
+* **[React](https://reactjs.org)**
 * **[Tailwind css](https://tailwindcss.com/)**
 * **[Framer motion](https://www.framer.com/motion/)**
 * **[Tabler icons](https://tabler-icons.io/)**
-* **[Docker](https://www.docker.com/)**
-
+* **[Vite](https://vitejs.dev/)**
