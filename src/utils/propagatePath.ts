@@ -1,5 +1,5 @@
-import { Years } from "../Picker";
-import { allSubjects } from "../subjects";
+import { Years } from "../components/Picker";
+import { allSubjects } from "../resources/subjects";
 import type { ExamData } from "../types";
 
 const propagatePath = (path: string[]): [Partial<ExamData>, number, string] => {

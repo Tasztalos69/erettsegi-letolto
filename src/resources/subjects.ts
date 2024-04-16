@@ -1,4 +1,4 @@
-import type { Indexable } from "./types";
+import type { Indexable } from "../types";
 
 export const alapTargyak: Indexable = {
   mat: "Matematika",

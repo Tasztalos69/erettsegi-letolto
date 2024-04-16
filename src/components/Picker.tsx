@@ -2,12 +2,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { IconSearch } from "@tabler/icons-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { agazatok, alapTargyak, allSubjects } from "resources/subjects";
 
-import PickerButton from "./components/PickerButton";
-import { type ExamData, type Indexable, Stage, type StageProps } from "./types";
-import urlConstructor from "./utils/urlConstructor";
-import missingExams from "./missing-exams.json";
-import { agazatok, alapTargyak, allSubjects } from "./subjects";
+import {
+  type ExamData,
+  type Indexable,
+  Stage,
+  type StageProps,
+} from "../types";
+import urlConstructor from "../utils/urlConstructor";
+import missingExams from "../resources/missing-exams.json";
+
+import PickerButton from "./PickerButton";
 
 // TODO Add upcoming years
 const maxYear =
@@ -180,7 +186,7 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
                   <button
                     key={b}
                     type="button"
-                    className={`uppercase font-semibold font-mono mx-2 decoration-dotted ${
+                    className={`uppercase font-semibold font-mono mx-2 decoration-dotted underline-offset-4 ${
                       cat === b && "dark:text-teal-500 text-teal-500 underline"
                     }`}
                     onClick={() => setCat(b as "Alap tárgyak" | "Ágazatok")}

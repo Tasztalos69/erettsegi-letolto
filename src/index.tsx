@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import App from "./App";
-import Adatvedelem from "./Adatvedelem";
+import Adatvedelem from "./pages/Adatvedelem";
 import useForceUpdate from "./utils/forceUpdate";
 
 import "./index.css";
@@ -19,7 +19,7 @@ const Wrapper = () => {
   }, [num]);
 
   return (
-    <div className="absolute top-0 left-0 w-screen min-h-screen dark:bg-gray-900 dark:text-gray-50">
+    <>
       <Helmet>
         {collection && (
           <script
@@ -38,7 +38,7 @@ const Wrapper = () => {
           <Route path="*" element={<App />} />
         </Routes>
       </Router>
-    </div>
+    </>
   );
 };
 

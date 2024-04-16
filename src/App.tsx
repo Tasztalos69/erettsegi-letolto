@@ -1,11 +1,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import resolveConfig from "tailwindcss/resolveConfig";
+import Footer from "components/Footer";
 
-import Legend from "./Legend";
-import Picker from "./Picker";
+import tailwindConfig from "../tailwind.config";
+
+import Legend from "./components/Legend";
+import Picker from "./components/Picker";
 import { type ExamData, Stage } from "./types";
 import propagatePath from "./utils/propagatePath";
+
+const { theme } = resolveConfig(tailwindConfig);
 
 const App = () => {
   const [stage, setStage] = useState<Stage>(0);
@@ -26,11 +32,11 @@ const App = () => {
   }, [loc.pathname]);
 
   return (
-    <div className="relative container mx-auto min-h-[75vh] xl:min-h-[80vh]">
-      <h1 className="mt-12 font-mono text-3xl font-bold text-center uppercase lg:text-5xl xl:mt-24">
+    <div className="flex flex-col items-center justify-center min-h-screen dark:bg-gray-900 dark:text-gray-50">
+      <h1 className="mt-12 font-mono text-3xl font-bold uppercase lg:text-5xl xl:mt-24">
         Érettségi letöltő
       </h1>
-      <div className="container relative w-11/12 mx-auto mt-20 lg:w-3/5">
+      <div className="relative flex-grow  mt-20 w-[90%] md:w-4/5 lg:w-3/5">
         <Picker
           stage={stage}
           setStage={setStage}
@@ -46,7 +52,7 @@ const App = () => {
               exit={{ opacity: 0 }}
               transition={{ delay: 0, duration: 0.2 }}
               whileHover={{
-                color: "rgb(45 212 191)",
+                color: theme.colors.teal[400],
               }}
               className="block mx-auto font-mono text-lg font-semibold underline uppercase lg:absolute lg:-left-4 lg:bottom-auto lg:top-0 lg:-translate-x-full"
               onClick={() => {
@@ -68,22 +74,7 @@ const App = () => {
           )}
         </AnimatePresence>
       </div>
-      <footer className="absolute bottom-0 translate-y-full xl:translate-y-none left-1/2 -translate-x-1/2 text-zinc-400 font-mono text-center dark:bg-gray-900 py-6 w-[110vw]">
-        <a href="mailto:sugarvedelem@icloud.com" className="mx-4">
-          Elérhetőség
-        </a>
-        •
-        <a
-          href="https://github.com/Tasztalos69/erettsegi-letolto/issues/new"
-          className="mx-4"
-        >
-          Hibajelentés
-        </a>
-        {window.innerWidth >= 680 ? "•" : <br />}
-        <Link to="/adatvedelem" className="mx-4">
-          Adatvédelem
-        </Link>
-      </footer>
+      <Footer />
     </div>
   );
 };
