@@ -1,45 +1,40 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { IconSearch } from "@tabler/icons-react";
+import { IconSearch, IconSquare, IconSquareCheck } from "@tabler/icons-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { agazatok, alapTargyak, allSubjects } from "resources/subjects";
+import SUBJECTS, { categorized, Category } from "resources/subjects";
 
 import {
   type ExamData,
-  type Indexable,
   Stage,
-  type StageProps,
+  SrcType,
+  Phase,
+  Difficulty,
+  System,
 } from "../types";
 import urlConstructor from "../utils/urlConstructor";
 import missingExams from "../resources/missing-exams.json";
 
 import PickerButton from "./PickerButton";
+import { BoxWrapper } from "./Legend";
 
-// TODO Add upcoming years
 const maxYear =
   new Date().getFullYear() - Number(!(new Date().getMonth() >= 5));
 
 const nulled = Array.from({ length: maxYear - 2005 + 1 }).fill(0) as Array<0>;
-export const Years: number[] = nulled.map((x, i) => x + 2005 + i);
+export const YEARS: number[] = nulled.map((x, i) => x + 2005 + i);
 
-const humanPhase: Indexable = {
+const humanPhase: Record<Phase, string> = {
   osz: "ősz (október-november)",
   tavasz: "tavasz (május-június)",
 };
 
-const humanDiff: Indexable = {
+const humanDiff: Record<Difficulty, string> = {
   kozep: "középszint",
   emelt: "emelt szint",
 };
 
-const audioSubjects = new Set([
-  "angol",
-  "nemet",
-  "francia",
-  "spanyol",
-  "orosz",
-  "olasz",
-]);
+const audioSubjects = Object.keys(categorized[Category.Nyelvek]);
 
 const forrasSubjects = new Set([
   "inf",
@@ -61,9 +56,16 @@ const StageDiv = (props: any) => (
   />
 );
 
+type StageProps = {
+  readonly stage: Stage;
+  readonly setStage: (num: number) => void;
+  readonly data: Partial<ExamData>;
+  readonly setData: (data: Partial<ExamData>) => void;
+};
+
 const Picker = ({ stage, setStage, data, setData }: StageProps) => {
   const [search, setSearch] = useState("");
-  const [cat, setCat] = useState<"Alap tárgyak" | "Ágazatok">("Alap tárgyak");
+  const [cat, setCat] = useState<Category>(Category.Alap);
   const loc = useLocation();
   const nav = useNavigate();
   const path = loc.pathname.split("/");
@@ -81,7 +83,7 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
       newData.year === new Date().getFullYear() &&
       new Date().getMonth() < 10
     ) {
-      additionalData = { phase: "tavasz" };
+      additionalData = { phase: Phase.Tavasz };
       plusStage++;
       newPart += "/tavasz";
     }
@@ -97,7 +99,7 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
       case Stage.YEAR:
         return (
           <StageDiv key="year">
-            {Years.map(y => (
+            {YEARS.map(y => (
               <PickerButton key={y} onClick={() => addData({ year: y }, y)}>
                 {y}
               </PickerButton>
@@ -111,13 +113,13 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
           <StageDiv key="phase">
             <PickerButton
               key="tavasz"
-              onClick={() => addData({ phase: "tavasz" }, "tavasz")}
+              onClick={() => addData({ phase: Phase.Tavasz }, "tavasz")}
             >
               {humanPhase.tavasz}
             </PickerButton>
             <PickerButton
               key="osz"
-              onClick={() => addData({ phase: "osz" }, "osz")}
+              onClick={() => addData({ phase: Phase.Osz }, "osz")}
             >
               {humanPhase.osz}
             </PickerButton>
@@ -130,13 +132,13 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
           <StageDiv key="diff">
             <PickerButton
               key="kozep"
-              onClick={() => addData({ difficulty: "kozep" }, "kozep")}
+              onClick={() => addData({ difficulty: Difficulty.Kozep }, "kozep")}
             >
               {humanDiff.kozep}
             </PickerButton>
             <PickerButton
               key="emelt"
-              onClick={() => addData({ difficulty: "emelt" }, "emelt")}
+              onClick={() => addData({ difficulty: Difficulty.Emelt }, "emelt")}
             >
               {humanDiff.emelt}
             </PickerButton>
@@ -145,18 +147,19 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
 
       //* SUBJECT
       case Stage.SUBJECT:
-        const filteredMissingExams = missingExams.filter(
+        const filteredMissingExams = (missingExams as ExamData[]).filter(
           e =>
             e.year === data.year &&
             e.phase === data.phase &&
-            e.difficulty === data.difficulty
+            e.difficulty === data.difficulty &&
+            e.system === data.system
         );
+
         const filteredMissingExamNames = new Set(
           filteredMissingExams.map(e => e.subject)
         );
-        const filtered = Object.entries(
-          cat === "Alap tárgyak" ? alapTargyak : agazatok
-        )
+
+        const filtered = Object.entries(categorized[cat])
           .filter(s => !filteredMissingExamNames.has(s[0]))
           .filter(s =>
             search.length > 0
@@ -164,7 +167,9 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
               : s
           )
           .filter(s =>
-            data.difficulty === "emelt" ? s[0] !== "tarspr" : s[0] !== "tars"
+            data.difficulty === Difficulty.Emelt
+              ? s[0] !== "tarspr"
+              : s[0] !== "tars"
           );
         return (
           <StageDiv key="subject">
@@ -178,24 +183,53 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
                 onChange={e => setSearch(e.target.value)}
               />
               <IconSearch className="ml-2" />
+
               <div className="relative w-1 mx-6">
                 <span className="block absolute h-12 w-0.5 rounded-full top-1/2 -translate-y-1/2 bg-black dark:bg-gray-50" />
               </div>
               <div>
-                {["Alap tárgyak", "Ágazatok"].map(b => (
+                {Object.values(Category).map(category => (
                   <button
-                    key={b}
+                    key={category}
                     type="button"
-                    className={`uppercase font-semibold font-mono mx-2 decoration-dotted underline-offset-4 ${
-                      cat === b && "dark:text-teal-500 text-teal-500 underline"
+                    className={`uppercase font-semibold font-mono mx-2 decoration-dotted underline-offset-4 outline-none ${
+                      cat === category &&
+                      "dark:text-teal-500 text-teal-500 underline"
                     }`}
-                    onClick={() => setCat(b as "Alap tárgyak" | "Ágazatok")}
+                    onClick={() => setCat(category)}
                   >
-                    {b}
+                    {category}
                   </button>
                 ))}
               </div>
             </div>
+
+            {data.year! > 2021 && (
+              <div
+                className="relative mt-2 mb-10 w-min mx-auto whitespace-nowrap cursor-pointer"
+                onClick={() =>
+                  setData({
+                    ...data,
+                    system: data.system === 2020 ? 2012 : 2020,
+                  })
+                }
+              >
+                {/* Checkbox */}
+                <AnimatePresence initial={false}>
+                  {data.system === 2020 ? (
+                    <BoxWrapper key="check">
+                      <IconSquareCheck className="text-teal-500" />
+                    </BoxWrapper>
+                  ) : (
+                    <BoxWrapper key="square">
+                      <IconSquare />
+                    </BoxWrapper>
+                  )}
+                </AnimatePresence>
+                <p className="uppercase font-semibold ml-10">Új NAT</p>
+              </div>
+            )}
+
             {filtered.length > 0 ? (
               filtered.map(s => {
                 return (
@@ -225,7 +259,7 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
           ) : (
             <br />
           );
-        const subjectName = allSubjects[data.subject!];
+        const subjectName = SUBJECTS[data.subject!];
         const isLongName = subjectName.length > 25;
         return (
           <StageDiv key="dl" className="text-center">
@@ -257,7 +291,7 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
             {data.subject !== "tarspr" && (
               <PickerButton
                 key="fl"
-                onClick={() => window.open(urlConstructor(data, "fl"))}
+                onClick={() => window.open(urlConstructor(data, SrcType.Fl))}
               >
                 Feladatlap
               </PickerButton>
@@ -266,29 +300,29 @@ const Picker = ({ stage, setStage, data, setData }: StageProps) => {
               <>
                 <PickerButton
                   key="for"
-                  onClick={() => window.open(urlConstructor(data, "for"))}
+                  onClick={() => window.open(urlConstructor(data, SrcType.For))}
                 >
                   Forrás
                 </PickerButton>
                 <PickerButton
                   key="mintmeg"
-                  onClick={() => window.open(urlConstructor(data, "meg"))}
+                  onClick={() => window.open(urlConstructor(data, SrcType.Meg))}
                 >
                   Mintamegoldás
                 </PickerButton>
               </>
             )}
-            {audioSubjects.has(data.subject!) && (
+            {audioSubjects.includes(data.subject!) && (
               <PickerButton
                 key="hang"
-                onClick={() => window.open(urlConstructor(data, "hang"))}
+                onClick={() => window.open(urlConstructor(data, SrcType.Hang))}
               >
                 Hanganyag
               </PickerButton>
             )}
             <PickerButton
               key="ut"
-              onClick={() => window.open(urlConstructor(data, "ut"))}
+              onClick={() => window.open(urlConstructor(data, SrcType.Ut))}
             >
               {data.subject === "tarspr" ? "Útmutató" : "Megoldás"}
             </PickerButton>

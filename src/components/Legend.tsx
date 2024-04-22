@@ -10,7 +10,7 @@ const { theme } = resolveConfig(tailwindConfig);
 
 const stageNames = ["Év", "Időszak", "Szint", "Tantárgy", "Letöltés"];
 
-const BoxWrapper = ({ children }: { readonly children: ReactNode }) => (
+export const BoxWrapper = ({ children }: { readonly children: ReactNode }) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}

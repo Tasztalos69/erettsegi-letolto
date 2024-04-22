@@ -22,7 +22,9 @@ const App = () => {
   path.shift();
 
   useEffect(() => {
-    const [newData, newStage, newPath] = propagatePath(path);
+    const [newData, newStage, newPath] = propagatePath(path, {
+      system: data.system,
+    });
     setData(newData);
     setStage(newStage);
 
