@@ -9,6 +9,9 @@
     "unicorn/switch-case-braces": ["error", "avoid"],
     "no-warning-comments": "off",
     "no-case-declarations": "off",
+    "no-await-in-loop": "off",
+    "max-nested-callbacks": ["error", { "max": 5 }],
+    "unicorn/no-array-reduce": "off",
     "import/order": [
       "error",
       {
@@ -31,6 +34,13 @@
       "error",
       {
         "namedComponents": "arrow-function"
+      }
+    ],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "default",
+        "format": ["strictCamelCase", "StrictPascalCase", "UPPER_CASE"]
       }
     ],
     "@typescript-eslint/ban-types": [

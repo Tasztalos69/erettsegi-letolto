@@ -1,18 +1,25 @@
 import { IconSquare, IconSquareCheck } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
+import type { ReactNode } from "react";
 import type { NavigateFunction } from "react-router-dom";
+import resolveConfig from "tailwindcss/resolveConfig";
+
+import tailwindConfig from "../../tailwind.config";
+
+const { theme } = resolveConfig(tailwindConfig);
 
 const stageNames = ["Év", "Időszak", "Szint", "Tantárgy", "Letöltés"];
 
-const BoxWrapper = (props: any) => (
+export const BoxWrapper = ({ children }: { readonly children: ReactNode }) => (
   <motion.div
-    {...props}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-    transition={{ delay: 0, duration: 0.7 }}
+    transition={{ delay: 0, duration: 0.5 }}
     className="absolute left-0 origin-center -translate-y-1/2 top-1/2"
-  />
+  >
+    {children}
+  </motion.div>
 );
 
 type LegendProps = {
@@ -23,13 +30,14 @@ type LegendProps = {
 
 const Legend = ({ stage, nav, path }: LegendProps) => {
   return (
-    <div className="hidden lg:block w-1/5 absolute right-0 top-0 translate-x-[110%]">
+    <div className="absolute top-0 hidden translate-x-full -right-6 lg:block">
       <ul>
-        {stageNames.map((n, i) => {
+        {stageNames.map((name, i) => {
           const completed = stage > i || stage === stageNames.length - 1;
+
           return (
             <li
-              key={n}
+              key={name}
               className={`relative pl-8 flex items-center font-mono font-semibold text-xl my-8 first:mt-2 text-zinc-400 ${
                 completed && "text-teal-500 cursor-pointer"
               } transition-all duration-700`}
@@ -40,10 +48,11 @@ const Legend = ({ stage, nav, path }: LegendProps) => {
                 }
               }}
             >
+              {/* Checkbox */}
               <AnimatePresence initial={false}>
                 {completed ? (
                   <BoxWrapper key="check">
-                    <IconSquareCheck />
+                    <IconSquareCheck className="text-teal-500" />
                   </BoxWrapper>
                 ) : (
                   <BoxWrapper key="square">
@@ -51,7 +60,17 @@ const Legend = ({ stage, nav, path }: LegendProps) => {
                   </BoxWrapper>
                 )}
               </AnimatePresence>
-              {n}
+
+              {/* The title */}
+              <motion.span
+                animate={{
+                  color: completed ? theme.colors.teal[500] : undefined,
+                }}
+              >
+                {name}
+              </motion.span>
+
+              {/* Connecting dots */}
               {i < stageNames.length - 1 && (
                 <span
                   className={`block absolute h-6 left-[10px] -bottom-7 border-l-4 border-dotted ${

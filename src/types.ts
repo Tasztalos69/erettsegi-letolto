@@ -6,22 +6,34 @@ export enum Stage {
   DLOAD,
 }
 
-export type StageProps = {
-  stage: Stage;
-  setStage: (num: number) => void;
-  data: Partial<ExamData>;
-  setData: (data: Partial<ExamData>) => void;
-};
+export enum Phase {
+  Osz = "osz",
+  Tavasz = "tavasz",
+}
+
+export enum Difficulty {
+  Kozep = "kozep",
+  Emelt = "emelt",
+}
+
+export type System = 2012 | 2020 | "all";
 
 export type ExamData = {
   year: number;
-  phase: "osz" | "tavasz";
-  difficulty: "kozep" | "emelt";
+  phase: Phase;
+  difficulty: Difficulty;
   subject: string;
+  system: System;
 };
 
 export type Indexable = Record<string, string>;
 
-export type SrcType = "fl" | "ut" | "for" | "meg" | "hang";
+export enum SrcType {
+  Fl = "fl",
+  Ut = "ut",
+  For = "for",
+  Meg = "meg",
+  Hang = "hang",
+}
 
 export type Nullable<T> = T | null;
