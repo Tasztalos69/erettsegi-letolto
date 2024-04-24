@@ -1,6 +1,12 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import App from "./App";
@@ -9,7 +15,7 @@ import useForceUpdate from "./utils/forceUpdate";
 
 import "./index.css";
 
-const Wrapper = () => {
+const Root = () => {
   const [collection, setCollection] = useState(true);
 
   const [num, update] = useForceUpdate();
@@ -17,6 +23,14 @@ const Wrapper = () => {
   useEffect(() => {
     setCollection(!localStorage.getItem("disable-data-collection"));
   }, [num]);
+
+  const router = createBrowserRouter([
+    {
+      path: "/adatvedelem",
+      element: <Adatvedelem update={update} />,
+    },
+    { path: "/:year?/:phase?/:difficulty?/:subject?", element: <App /> },
+  ]);
 
   return (
     <>
@@ -29,15 +43,7 @@ const Wrapper = () => {
           />
         )}
       </Helmet>
-      <Router>
-        <Routes>
-          <Route
-            path="/adatvedelem"
-            element={<Adatvedelem update={update} />}
-          />
-          <Route path="*" element={<App />} />
-        </Routes>
-      </Router>
+      <RouterProvider router={router} />
     </>
   );
 };
@@ -48,6 +54,6 @@ const root = createRoot(container!);
 
 root.render(
   <StrictMode>
-    <Wrapper />
+    <Root />
   </StrictMode>
 );

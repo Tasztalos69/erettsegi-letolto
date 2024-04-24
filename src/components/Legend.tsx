@@ -1,10 +1,12 @@
 import { IconSquare, IconSquareCheck } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ReactNode } from "react";
-import type { NavigateFunction } from "react-router-dom";
+import { useParams, type NavigateFunction } from "react-router-dom";
 import resolveConfig from "tailwindcss/resolveConfig";
 
 import tailwindConfig from "../../tailwind.config";
+import { ExamData } from "types";
+import useParseParams from "utils/useParseParams";
 
 const { theme } = resolveConfig(tailwindConfig);
 
@@ -22,13 +24,7 @@ export const BoxWrapper = ({ children }: { readonly children: ReactNode }) => (
   </motion.div>
 );
 
-type LegendProps = {
-  readonly stage: number;
-  readonly nav: NavigateFunction;
-  readonly path: string[];
-};
-
-const Legend = ({ stage, nav, path }: LegendProps) => {
+const Legend = () => {
   return (
     <div className="absolute top-0 hidden translate-x-full -right-6 lg:block">
       <ul>

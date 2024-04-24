@@ -1,3 +1,5 @@
+import type SUBJECTS from "resources/subjects";
+
 export enum Stage {
   YEAR,
   PHASE,
@@ -22,7 +24,7 @@ export type ExamData = {
   year: number;
   phase: Phase;
   difficulty: Difficulty;
-  subject: string;
+  subject: keyof typeof SUBJECTS;
   system: System;
 };
 

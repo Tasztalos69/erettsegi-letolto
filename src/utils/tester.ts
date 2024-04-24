@@ -1,3 +1,9 @@
+/*
+! This file exists on its own. It's meant to be ran with node (or bun).
+
+This is the tester, which will ping every exam ever, and note whether it exists or not.
+*/
+
 import fs from "node:fs";
 
 import chalk from "chalk";
