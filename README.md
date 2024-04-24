@@ -10,3 +10,8 @@ Az oktatas.hu-n bár kategorikusan fent van az összes érettségi feladat, forr
 * **[Framer motion](https://www.framer.com/motion/)**
 * **[Tabler icons](https://tabler-icons.io/)**
 * **[Vite](https://vitejs.dev/)**
+
+## Todo
+- [ ] Hiányzó vizsgák helyett a megtartottak tárolása (missing megfordítása)
+- [ ] `React router` alapú navigálás
+- [ ] Többnyelvű vizsgák
