@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
 import type SUBJECTS from "resources/subjects";
 
 export enum Stage {
@@ -18,7 +19,16 @@ export enum Difficulty {
   Emelt = "emelt",
 }
 
-export type System = 2012 | 2020 | "all";
+export type System = "all" | "2012" | "2020";
+export type StoredSystem = "all" | Array<"2012" | "2020">;
+
+export enum SrcType {
+  Fl = "fl",
+  Ut = "ut",
+  For = "for",
+  Meg = "meg",
+  Hang = "hang",
+}
 
 export type ExamData = {
   year: number;
@@ -28,14 +38,18 @@ export type ExamData = {
   system: System;
 };
 
-export type Indexable = Record<string, string>;
+export type HeldExams = {
+  [key: number]: {
+    [key in Phase]: {
+      [key in Difficulty]: {
+        [key: keyof typeof SUBJECTS]: StoredSystem;
+      };
+    };
+  };
+};
 
-export enum SrcType {
-  Fl = "fl",
-  Ut = "ut",
-  For = "for",
-  Meg = "meg",
-  Hang = "hang",
-}
+export type RecursivePartial<T> = {
+  [P in keyof T]?: RecursivePartial<T[P]>;
+};
 
 export type Nullable<T> = T | null;

@@ -1,118 +1,173 @@
+/* eslint-disable max-depth */
+
 /*
 ! This file exists on its own. It's meant to be ran with node (or bun).
 
-This is the tester, which will ping every exam ever, and note whether it exists or not.
+This is the tester, which will ping oktatas.hu for every possible exam, and note whether it was held or not.
 */
 
 import fs from "node:fs";
+import process from "node:process";
 
 import chalk from "chalk";
 import ora from "ora";
 import axios, { type AxiosError } from "axios";
-import { YEARS } from "components/Picker";
-import { SrcType, Phase, Difficulty, type ExamData, type System } from "types";
+import { YEARS } from "resources/years";
+import {
+  SrcType,
+  Phase,
+  Difficulty,
+  type ExamData,
+  type RecursivePartial,
+  type HeldExams,
+  type StoredSystem,
+} from "types";
 import SUBJECTS from "resources/subjects";
 
 import urlConstructor from "./urlConstructor";
+import sum from "./sum";
 
-type ExamResponse = ExamData & {
-  code?: number;
-  url: string;
-};
+const { log } = console;
+const { green, red, cyan } = chalk;
 
-const examStr = (e: ExamResponse) =>
+// Count of all exams to be tested
+const LENGTH = YEARS.map(y => {
+  return (
+    Object.values(Phase).length *
+    Object.values(Difficulty).length *
+    Object.keys(SUBJECTS).length *
+    (y > 2021 ? 2 : 1)
+  );
+}).reduce(sum, 0);
+
+const spinner = ora(`Sending requests... (0/${LENGTH})`);
+let success = 0;
+let fail = 0;
+
+const exams: RecursivePartial<HeldExams> = {};
+
+// ------------ HELPERS
+
+/**
+ * Stringify an exam response
+ * @param e The exam to stringify
+ * @param code The status code of the response
+ * @returns A stringified version of the exam response
+ */
+const examStr = (e: ExamData, code: number | undefined) =>
   "[" +
-  (e.code === 200 ? chalk.green(e.code) : chalk.red(e.code)) +
+  (code === 200 ? green(code) : red(code)) +
   "] " +
-  chalk.cyan(e.year) +
+  cyan(e.year) +
   " " +
   e.phase.padEnd(8) +
   e.difficulty.padEnd(6) +
-  e.subject.padEnd(10) +
+  e.subject.padEnd(12) +
   (e.system === "all" ? "" : `v${e.system}`);
 
-const exams: ExamResponse[] = YEARS.flatMap(year =>
-  Object.values(Phase).flatMap(phase =>
-    Object.values(Difficulty).flatMap(difficulty =>
-      Object.keys(SUBJECTS).flatMap(subject => {
+/**
+ * Test if an exam was held, by pinging its URL
+ * @param exam The exam to test
+ * @returns Status code of the response
+ */
+const requestExam = async (exam: ExamData) => {
+  const URL = urlConstructor(exam, SrcType.Ut);
+  let code: number | undefined;
+  try {
+    const res = await axios.head(URL);
+    code = res.status;
+    success++;
+    spinner.text = `Sending requests... (${success + fail}/${LENGTH}) - ${examStr(exam, code)}`;
+  } catch (error) {
+    code = (error as AxiosError).response?.status;
+    fail++;
+    spinner.text = `Sending requests... (${success + fail}/${LENGTH}) - ${examStr(exam, code)}`;
+  }
+
+  return code;
+};
+
+/**
+ * Save the results to a file
+ */
+const save = () => {
+  fs.writeFileSync("./held-exams.json", JSON.stringify(exams));
+  log(green("Held exams successfully written to file."));
+};
+
+/**
+ * Save on early exit too
+ */
+process.on("SIGINT", function () {
+  log("Caught interrupt signal");
+  save();
+  process.exit();
+});
+
+// ------------ MAIN
+spinner.start();
+
+// Traverse the exam tree, and test every exam whether it exists
+for (const year of YEARS) {
+  exams[year] = {};
+
+  for (const phase of Object.values(Phase)) {
+    exams[year]![phase] = {};
+
+    for (const difficulty of Object.values(Difficulty)) {
+      exams[year]![phase]![difficulty] = {};
+
+      for (const subject of Object.keys(SUBJECTS)) {
+        // After 2021, there are two systems, test all of them
         if (year > 2021) {
-          return ([2012, 2020] as System[]).flatMap(system => ({
+          const res12 = await requestExam({
             year,
             phase,
             difficulty,
             subject,
-            system,
-            url: urlConstructor(
-              {
-                year,
-                phase,
-                difficulty,
-                subject,
-                system,
-              },
-              SrcType.Ut
-            ),
-          }));
-        }
+            system: "2012",
+          });
+          const stored12 = res12 === 200 ? "2012" : undefined;
 
-        return [
-          {
+          const res20 = await requestExam({
+            year,
+            phase,
+            difficulty,
+            subject,
+            system: "2020",
+          });
+          const stored20 = res20 === 200 ? "2020" : undefined;
+
+          if (stored12 !== undefined || stored20 !== undefined) {
+            exams[year]![phase]![difficulty]![subject] = [
+              stored12,
+              stored20,
+            ].filter(Boolean) as StoredSystem;
+          }
+        } else {
+          const res = await requestExam({
             year,
             phase,
             difficulty,
             subject,
             system: "all",
-            url: urlConstructor(
-              {
-                year,
-                phase,
-                difficulty,
-                subject,
-                system: "all",
-              },
-              SrcType.Ut
-            ),
-          },
-        ];
-      })
-    )
-  )
-);
-
-const main = async () => {
-  const spinner = ora(`Sending requests... (0/${exams.length})`).start();
-  let spinnerCount = 0;
-  for (const exam of exams) {
-    try {
-      const res = await axios.head(exam.url);
-      exam.code = res.status;
-      spinner.text = `Sending requests... (${spinnerCount++}/${exams.length}) - ${examStr(exam)}`;
-    } catch (error) {
-      exam.code = (error as AxiosError).response?.status;
-      spinner.text = `Sending requests... (${spinnerCount++}/${exams.length}) - ${examStr(exam)}`;
+          });
+          if (res === 200) {
+            exams[year]![phase]![difficulty]![subject] = "all";
+          }
+        }
+      }
     }
   }
+}
 
-  spinner.succeed("Requests sent!");
+spinner.succeed("Requests sent!");
 
-  exams.map(e => console.log(examStr(e)));
+log(
+  green(success + " OK, ") +
+    red(fail + " error, ") +
+    (success + fail) +
+    " total"
+);
 
-  console.log(
-    chalk.green(exams.filter(e => e.code === 200).length + " OK, ") +
-      chalk.red(exams.filter(e => e.code !== 200).length + " error, ") +
-      exams.length +
-      " total"
-  );
-
-  const missing: ExamData[] = exams
-    .filter(e => e.code !== 200)
-    .map(e => {
-      const { url, code, ...exam } = e;
-      return exam;
-    });
-
-  fs.writeFileSync("missing-exams.json", JSON.stringify(missing));
-  console.log(chalk.green("Missing exams successfully written to file."));
-};
-
-void main();
+save();

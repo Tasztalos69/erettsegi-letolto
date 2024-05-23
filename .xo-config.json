@@ -12,6 +12,7 @@
     "no-await-in-loop": "off",
     "max-nested-callbacks": ["error", { "max": 5 }],
     "unicorn/no-array-reduce": "off",
+    "unicorn/no-array-callback-reference": "off",
     "import/order": [
       "error",
       {
