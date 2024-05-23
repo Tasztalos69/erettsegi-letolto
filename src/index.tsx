@@ -7,7 +7,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 import App from "./App";
 import Adatvedelem from "./pages/Adatvedelem";
@@ -33,7 +33,7 @@ const Root = () => {
   ]);
 
   return (
-    <>
+    <HelmetProvider>
       <Helmet>
         {collection && (
           <script
@@ -44,7 +44,7 @@ const Root = () => {
         )}
       </Helmet>
       <RouterProvider router={router} />
-    </>
+    </HelmetProvider>
   );
 };
 
