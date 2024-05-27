@@ -39,7 +39,7 @@ export type ExamData = {
 };
 
 export type HeldExams = {
-  [key: number]: {
+  [key: string]: {
     [key in Phase]: {
       [key in Difficulty]: {
         [key: keyof typeof SUBJECTS]: StoredSystem;

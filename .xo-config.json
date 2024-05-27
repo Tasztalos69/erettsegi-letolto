@@ -5,7 +5,13 @@
   "rules": {
     "unicorn/prevent-abbreviations": "off",
     "react/react-in-jsx-scope": "off",
-    "import/extensions": ["error", "never"],
+    "import/extensions": [
+      "error",
+      "never",
+      {
+        "json": "always"
+      }
+    ],
     "unicorn/switch-case-braces": ["error", "avoid"],
     "no-warning-comments": "off",
     "no-case-declarations": "off",
@@ -41,7 +47,8 @@
       "error",
       {
         "selector": "default",
-        "format": ["strictCamelCase", "StrictPascalCase", "UPPER_CASE"]
+        "format": ["strictCamelCase", "StrictPascalCase", "UPPER_CASE"],
+        "leadingUnderscore": "allow"
       }
     ],
     "@typescript-eslint/ban-types": [

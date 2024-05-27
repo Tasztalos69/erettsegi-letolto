@@ -21,6 +21,7 @@ import {
   type RecursivePartial,
   type HeldExams,
   type StoredSystem,
+  type System,
 } from "types";
 import SUBJECTS from "resources/subjects";
 

@@ -1,12 +1,11 @@
 import { IconSquare, IconSquareCheck } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { ReactNode } from "react";
-import { useParams, type NavigateFunction } from "react-router-dom";
+import { useContext, type ReactNode } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import resolveConfig from "tailwindcss/resolveConfig";
 
 import tailwindConfig from "../../tailwind.config";
-import { ExamData } from "types";
-import useParseParams from "utils/useParseParams";
+import ExamContext from "../context/ExamContext";
 
 const { theme } = resolveConfig(tailwindConfig);
 
@@ -25,6 +24,11 @@ export const BoxWrapper = ({ children }: { readonly children: ReactNode }) => (
 );
 
 const Legend = () => {
+  const examData = useContext(ExamContext);
+  const loc = useLocation();
+  const nav = useNavigate();
+
+  const stage = Object.values(examData).filter(Boolean).length;
   return (
     <div className="absolute top-0 hidden translate-x-full -right-6 lg:block">
       <ul>
@@ -39,8 +43,12 @@ const Legend = () => {
               } transition-all duration-700`}
               onClick={() => {
                 if (completed) {
-                  path = path.slice(0, i);
-                  nav(path.join("/"));
+                  const path = loc.pathname
+                    .split("/")
+                    .slice(1, i + 1)
+                    .join("/");
+
+                  nav("/" + path);
                 }
               }}
             >

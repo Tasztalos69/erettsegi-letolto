@@ -1,11 +1,14 @@
-export enum Category {
+export enum SubjectCategory {
   Alap = "Alap tárgyak",
   Nyelvek = "Nyelvek",
   Agazat = "Ágazatok",
 }
 
-export const categorized: Record<Category, Record<string, string>> = {
-  [Category.Alap]: {
+export const categorizedSubjects: Record<
+  SubjectCategory,
+  Record<string, string>
+> = {
+  [SubjectCategory.Alap]: {
     mat: "Matematika",
     magyir: "Magyar nyelv és irodalom",
     tort: "Történelem",
@@ -24,7 +27,7 @@ export const categorized: Record<Category, Record<string, string>> = {
     pszichologia: "Pszichológia",
   },
 
-  [Category.Nyelvek]: {
+  [SubjectCategory.Nyelvek]: {
     angol: "Angol",
     nemet: "Német",
     francia: "Francia",
@@ -37,7 +40,7 @@ export const categorized: Record<Category, Record<string, string>> = {
     ukran: "Ukrán",
   },
 
-  [Category.Agazat]: {
+  [SubjectCategory.Agazat]: {
     artist: "artista ismeretek",
     autorep: "autó- és repülőgép-szerelési ismeretek",
     automat: "automatikai és elektronikai ismeretek",
@@ -129,9 +132,8 @@ export const categorized: Record<Category, Record<string, string>> = {
   },
 };
 
-const SUBJECTS: Record<string, string> = Object.entries(categorized).reduce(
-  (acc, [cat, obj]) => ({ ...acc, ...obj }),
-  {}
-);
+const SUBJECTS: Record<string, string> = Object.entries(
+  categorizedSubjects
+).reduce((acc, [cat, obj]) => ({ ...acc, ...obj }), {});
 
 export default SUBJECTS;

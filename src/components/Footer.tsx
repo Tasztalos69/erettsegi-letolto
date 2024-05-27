@@ -14,7 +14,7 @@ const Footer = () => {
         href="mailto:bmk@wanter.dev"
         className="mx-4"
       >
-        Elérhetőség
+        Kapcsolat
       </a>
       •
       <a

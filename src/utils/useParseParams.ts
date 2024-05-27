@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-import { YEARS } from "components/Picker";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SUBJECTS from "resources/subjects";
+import { YEARS } from "resources/years";
 import { Difficulty, Phase, type ExamData } from "types";
 
 type IncomingParams = {
@@ -13,7 +13,12 @@ type IncomingParams = {
 };
 
 const useParseParams = (): Partial<ExamData> => {
-  const { year, phase, difficulty, subject } = useParams<IncomingParams>();
+  const {
+    year,
+    phase,
+    difficulty,
+    subject: _subject,
+  } = useParams<IncomingParams>();
   const nav = useNavigate();
   const loc = useLocation();
 
@@ -56,7 +61,19 @@ const useParseParams = (): Partial<ExamData> => {
     obj.difficulty = difficulty;
 
     // -------------------- Parse subject
-    if (!subject) return obj;
+    if (!_subject) return obj;
+
+    const splitted = _subject.split("-");
+
+    let subject;
+
+    if (splitted.length > 1 && splitted.at(1) === "v2020") {
+      subject = splitted.at(0)!;
+      obj.system = "2020";
+    } else {
+      subject = _subject;
+      obj.system = "2012";
+    }
 
     if (!Object.keys(SUBJECTS).includes(subject)) {
       nav(`/`);
